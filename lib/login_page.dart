@@ -1,87 +1,61 @@
-import 'dart:io';
-
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:google_sign_in/google_sign_in.dart';
+import 'package:flutter_signin_button/button_list.dart';
+import 'package:flutter_signin_button/button_view.dart';
+import 'package:operation_reminder/viewmodel/login_model.dart';
+import 'package:provider/provider.dart';
 
-class LoginPage extends StatefulWidget {
-  @override
-  _LoginPageState createState() => _LoginPageState();
-}
+import 'main.dart';
 
-class _LoginPageState extends State<LoginPage> {
-  FirebaseAuth _auth = FirebaseAuth.instance;
-  String loginState = 'Waiting';
-
+class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    _auth.authStateChanges().listen((User user) {
-      setState(() {
-        user == null
-            ? loginState = 'Not logged in.'
-            : loginState = 'Logged in. Welcome ${user.displayName}';
-      });
-    });
-
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
           title: Text('Login'),
         ),
-        body: Column(
-          children: [
-            Text(loginState),
-            FlatButton(
-              child: Text('Login With Google'),
-              onPressed: () {
-                kIsWeb ? signInWithGoogleWeb() : signInWithGoogleNative();
-              },
-            ),
-            FlatButton(
-              child: Text('Logout'),
-              onPressed: () {
-                FirebaseAuth.instance.signOut();
-                GoogleSignIn().signOut();
-              },
-            ),
-          ],
+        body: Center(
+          child: Consumer<LoginModel>(
+            builder: (context, model, child) {
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(model.currentUser != null
+                      ? model.currentUser.displayName
+                      : 'Not signed in.'),
+                  Divider(),
+                  SignInButton(
+                    Buttons.GoogleDark,
+                    padding: EdgeInsets.all(8.0),
+                    elevation: 8.0,
+                    onPressed: () async {
+                      await model.signInWithGoogle().catchError((error) {
+                        print(error);
+                      });
+                      print(model.currentUser.displayName);
+                      //TODO: Navigate to homepage.
+                      // Navigator.pushReplacement(
+                      //     context,
+                      //     MaterialPageRoute(
+                      //       builder: (context) => Loading(),
+                      //     ));
+                    },
+                  ),
+                  Divider(),
+                  IconButton(
+                    icon: Icon(Icons.logout),
+                    onPressed: () async {
+                      await model.signOut().catchError((error) {
+                        print(error);
+                      });
+                    },
+                  ),
+                ],
+              );
+            },
+          ),
         ),
       ),
     );
-  }
-
-  Future<UserCredential> signInWithGoogleNative() async {
-    // Trigger the authentication flow
-    final GoogleSignInAccount googleUser = await GoogleSignIn().signIn();
-
-    // Obtain the auth details from the request
-    final GoogleSignInAuthentication googleAuth =
-        await googleUser.authentication;
-
-    // Create a new credential
-    final GoogleAuthCredential credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth.accessToken,
-      idToken: googleAuth.idToken,
-    );
-
-    // Once signed in, return the UserCredential
-    return await FirebaseAuth.instance.signInWithCredential(credential);
-  }
-
-  Future<void> signInWithGoogleWeb() async {
-    // Create a new provider
-    GoogleAuthProvider googleProvider = GoogleAuthProvider();
-
-    googleProvider
-        .addScope('https://www.googleapis.com/auth/contacts.readonly');
-    googleProvider.setCustomParameters({'login_hint': 'user@example.com'});
-
-    // Once signed in, return the UserCredential
-    // return await FirebaseAuth.instance.signInWithPopup(googleProvider);
-
-    // Or use signInWithRedirect
-    return await FirebaseAuth.instance.signInWithRedirect(googleProvider);
   }
 }
