@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "522203587271",
+    "firebase_url": "https://operation-scheduler.firebaseio.com",
+    "project_id": "operation-scheduler",
+    "storage_bucket": "operation-scheduler.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:522203587271:android:e5d904f1d8168d319794e2",
+        "android_client_info": {
+          "package_name": "com.emink.operation_reminder"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "522203587271-bqdr8tktvrt84ercregg6bht0fvc86vd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.emink.operation_reminder",
+            "certificate_hash": "2534f2a003cb15a6b4d81d720f03db914eab7b3e"
+          }
+        },
+        {
+          "client_id": "522203587271-0s55mipuk18bvpln0jopi12qv0iao54n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBuTNBxvmhDYvkDUL9yPoYW0UrWQv-FkmE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "522203587271-0s55mipuk18bvpln0jopi12qv0iao54n.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
