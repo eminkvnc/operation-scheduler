@@ -7,8 +7,13 @@ class AuthService {
   User get currentUser => _auth.currentUser;
   Stream<User> get userStream => _auth.authStateChanges();
 
-  Future<dynamic> signInWithGoogle() async {
-    await (kIsWeb ? _signInWithGoogleWeb() : _signInWithGoogleNative());
+  Future<User> signInWithGoogle() async {
+    try {
+      await (kIsWeb ? _signInWithGoogleWeb() : _signInWithGoogleNative());
+      return _auth.currentUser;
+    } catch (e) {
+      return null;
+    }
   }
 
   Future<UserCredential> _signInWithGoogleNative() async {
