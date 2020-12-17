@@ -25,7 +25,11 @@ class LoginPage extends StatelessWidget {
                 padding: EdgeInsets.all(8.0),
                 elevation: 8.0,
                 onPressed: () async {
-                  await model.signInWithGoogle();
+                  try {
+                    await model.signInWithGoogle();
+                  } catch (e) {
+                    print(e);
+                  }
                 },
               ),
             ],

@@ -4,53 +4,36 @@ import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
   User get currentUser => _auth.currentUser;
   Stream<User> get userStream => _auth.authStateChanges();
 
   Future<User> signInWithGoogle() async {
     try {
-      await (kIsWeb ? _signInWithGoogleWeb() : _signInWithGoogleNative());
+      await _signInWithGoogle();
       return _auth.currentUser;
     } catch (e) {
-      return null;
+      throw e;
     }
   }
 
-  Future<UserCredential> _signInWithGoogleNative() async {
-    // Trigger the authentication flow
-    final GoogleSignInAccount googleUser = await GoogleSignIn().signIn();
+  Future<UserCredential> _signInWithGoogle() async {
+    final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
 
-    // Obtain the auth details from the request
     final GoogleSignInAuthentication googleAuth =
         await googleUser.authentication;
 
-    // Create a new credential
     final GoogleAuthCredential credential = GoogleAuthProvider.credential(
       accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
     );
 
-    // Once signed in, return the UserCredential
-    return await FirebaseAuth.instance.signInWithCredential(credential);
-  }
-
-  Future<void> _signInWithGoogleWeb() async {
-    // Create a new provider
-    GoogleAuthProvider googleProvider = GoogleAuthProvider();
-
-    googleProvider
-        .addScope('https://www.googleapis.com/auth/contacts.readonly');
-    googleProvider.setCustomParameters({'login_hint': 'user@example.com'});
-
-    // Once signed in, return the UserCredential
-    // return await FirebaseAuth.instance.signInWithPopup(googleProvider);
-
-    // Or use signInWithRedirect
-    return await FirebaseAuth.instance.signInWithRedirect(googleProvider);
+    return await _auth.signInWithCredential(credential);
   }
 
   Future<void> signOut() async {
-    await FirebaseAuth.instance.signOut();
-    return await GoogleSignIn().signOut();
+    await _googleSignIn.disconnect();
+    await _auth.signOut();
+    await _googleSignIn.signOut();
   }
 }
