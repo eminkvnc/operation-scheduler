@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:operation_reminder/screens/home_operations_page.dart';
+import 'package:operation_reminder/view/screens/home_operations_page.dart';
 
 import 'home_drafts_page.dart';
 

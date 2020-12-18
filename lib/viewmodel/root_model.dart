@@ -1,4 +1,4 @@
-import 'package:operation_reminder/screens/add_operation_draft_page.dart';
+import 'package:operation_reminder/view/screens/add_operation_draft_page.dart';
 import 'package:operation_reminder/viewmodel/base_model.dart';
 
 class RootModel extends BaseModel {

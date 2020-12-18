@@ -5,9 +5,9 @@ import 'package:operation_reminder/core/locator.dart';
 import 'package:operation_reminder/model/patient.dart';
 import 'package:operation_reminder/viewmodel/add_operation_draft_model.dart';
 
-import 'dialogs/patient_search.dart';
-import 'widgets/patient_card.dart';
-import 'widgets/priority_card_list.dart';
+import '../dialogs/patient_search.dart';
+import '../widgets/patient_card.dart';
+import '../widgets/priority_card_list.dart';
 
 class AddOperationDraftPage extends StatelessWidget {
   static const String routeName = '/add_operation_draft_page';

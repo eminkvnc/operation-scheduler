@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:operation_reminder/core/locator.dart';
 import 'package:operation_reminder/core/services/navigator_service.dart';
-import 'package:operation_reminder/screens/home_page.dart';
-import 'package:operation_reminder/screens/profile_page.dart';
-import 'package:operation_reminder/screens/search_page.dart';
+import 'package:operation_reminder/view/screens/search_page.dart';
+import 'package:operation_reminder/view/screens/home_page.dart';
+import 'package:operation_reminder/view/screens/profile_page.dart';
+import 'package:operation_reminder/view/screens/search_page.dart';
 import 'package:operation_reminder/viewmodel/login_model.dart';
 import 'package:operation_reminder/viewmodel/root_model.dart';
 import 'package:provider/provider.dart';

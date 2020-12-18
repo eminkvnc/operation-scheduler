@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:operation_reminder/model/patient.dart';
-import 'package:operation_reminder/screens/dialogs/add_patient_dialog.dart';
-import 'package:operation_reminder/screens/widgets/patient_card.dart';
+import 'package:operation_reminder/view/dialogs/add_patient_dialog.dart';
+import 'package:operation_reminder/view/widgets/patient_card.dart';
 import 'package:operation_reminder/viewmodel/add_operation_draft_model.dart';
 
 class PatientSearchList extends StatelessWidget {

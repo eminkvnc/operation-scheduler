@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:operation_reminder/core/locator.dart';
-import 'package:operation_reminder/screens/root_page.dart';
+import 'package:operation_reminder/view/screens/root_page.dart';
 import 'package:operation_reminder/viewmodel/add_operation_draft_model.dart';
 import 'package:operation_reminder/viewmodel/home_drafts_model.dart';
 import 'package:operation_reminder/viewmodel/login_model.dart';
@@ -12,7 +12,7 @@ import 'package:provider/provider.dart';
 
 import 'core/services/auth_service.dart';
 import 'core/services/navigator_service.dart';
-import 'screens/login_page.dart';
+import 'view/screens/login_page.dart';
 
 void main() {
   setupLocators();
