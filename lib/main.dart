@@ -4,6 +4,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:operation_reminder/core/locator.dart';
 import 'package:operation_reminder/screens/root_page.dart';
+import 'package:operation_reminder/viewmodel/add_operation_draft_model.dart';
+import 'package:operation_reminder/viewmodel/home_drafts_model.dart';
 import 'package:operation_reminder/viewmodel/login_model.dart';
 import 'package:operation_reminder/viewmodel/root_model.dart';
 import 'package:provider/provider.dart';
@@ -32,12 +34,19 @@ class OperationScheduler extends StatelessWidget {
         if (snapshot.connectionState == ConnectionState.done) {
           AuthService _authService = getIt<AuthService>();
           return MultiProvider(
+            //TODO: Provider'ları locator'a taşı.
             providers: [
               ChangeNotifierProvider(
                 create: (context) => getIt<LoginModel>(),
               ),
               ChangeNotifierProvider(
                 create: (context) => getIt<RootModel>(),
+              ),
+              ChangeNotifierProvider(
+                create: (context) => getIt<AddOperationDraftModel>(),
+              ),
+              ChangeNotifierProvider(
+                create: (context) => getIt<HomeDraftsModel>(),
               ),
             ],
             child: MaterialApp(

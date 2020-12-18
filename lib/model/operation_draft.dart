@@ -5,18 +5,37 @@ class OperationDraft {
   String id;
   String patientId;
   String priority;
-  String Description;
+  String description;
+  String customerId;
 
-  OperationDraft({this.id, this.patientId, this.priority, this.Description});
+  OperationDraft(
+      {this.id,
+      this.patientId,
+      this.priority,
+      this.description,
+      this.customerId});
 
   factory OperationDraft.fromSnapshot(DocumentSnapshot snapshot) {
     return OperationDraft(
-        id: snapshot.data()[Constants.FIRESTORE_FIELD_OPERATION_DRAFT_ID],
-        patientId: snapshot
-            .data()[Constants.FIRESTORE_FIELD_OPERATION_DRAFT_PATIENTID],
-        priority:
-            snapshot.data()[Constants.FIRESTORE_FIELD_OPERATION_DRAFT_PRIORITY],
-        Description: snapshot
-            .data()[Constants.FIRESTORE_FIELD_OPERATION_DRAFT_DESCRIPTION]);
+      id: snapshot.id,
+      patientId:
+          snapshot.data()[Constants.FIRESTORE_FIELD_OPERATION_DRAFT_PATIENTID],
+      priority:
+          snapshot.data()[Constants.FIRESTORE_FIELD_OPERATION_DRAFT_PRIORITY],
+      description: snapshot
+          .data()[Constants.FIRESTORE_FIELD_OPERATION_DRAFT_DESCRIPTION],
+      customerId:
+          snapshot.data()[Constants.FIRESTORE_FIELD_OPERATION_DRAFT_CUSTOMERID],
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      Constants.FIRESTORE_FIELD_OPERATION_DRAFT_ID: this.id,
+      Constants.FIRESTORE_FIELD_OPERATION_DRAFT_PATIENTID: this.patientId,
+      Constants.FIRESTORE_FIELD_OPERATION_DRAFT_PRIORITY: this.priority,
+      Constants.FIRESTORE_FIELD_OPERATION_DRAFT_DESCRIPTION: this.description,
+      Constants.FIRESTORE_FIELD_OPERATION_DRAFT_CUSTOMERID: this.customerId,
+    };
   }
 }

@@ -4,15 +4,23 @@ import 'package:operation_reminder/core/constants.dart';
 class Hospital {
   String id;
   String name;
-  String CostumerId;
+  String costumerId;
 
-  Hospital({this.id, this.name, this.CostumerId});
+  Hospital({this.id, this.name, this.costumerId});
 
   factory Hospital.fromSnapshot(DocumentSnapshot snapshot) {
     return Hospital(
-        id: snapshot.data()[Constants.FIRESTORE_FIELD_HOSPITAL_ID],
+        id: snapshot.id,
         name: snapshot.data()[Constants.FIRESTORE_FIELD_HOSPITAL_NAME],
-        CostumerId:
+        costumerId:
             snapshot.data()[Constants.FIRESTORE_FIELD_HOSPITAL_CUSTOMERID]);
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      Constants.FIRESTORE_FIELD_HOSPITAL_ID: this.id,
+      Constants.FIRESTORE_FIELD_HOSPITAL_NAME: this.name,
+      Constants.FIRESTORE_FIELD_HOSPITAL_CUSTOMERID: this.costumerId
+    };
   }
 }

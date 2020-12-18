@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:operation_reminder/screens/add_operation_draft_page.dart';
 import 'package:operation_reminder/screens/login_page.dart';
 import 'package:operation_reminder/screens/root_page.dart';
 
@@ -20,6 +21,10 @@ class NavigatorService {
         : _navigatorKey.currentState.pushReplacementNamed(routeName);
   }
 
+  Future<dynamic> pop() {
+    return _navigatorKey.currentState.maybePop();
+  }
+
   MaterialPageRoute generateRoute(RouteSettings settings) {
     switch (settings.name) {
       case LoginPage.routeName:
@@ -29,6 +34,9 @@ class NavigatorService {
       case RootPage.routeName:
         RootPageArgs args = settings.arguments;
         return MaterialPageRoute(builder: (context) => RootPage(args));
+        break;
+      case AddOperationDraftPage.routeName:
+        return MaterialPageRoute(builder: (context) => AddOperationDraftPage());
         break;
 
       default:

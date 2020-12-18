@@ -69,8 +69,8 @@ class RootPage extends StatelessWidget {
         ),
         floatingActionButton: FloatingActionButton(
           child: Icon(Icons.post_add_outlined),
-          onPressed: () {
-            //TODO: Navigate to add_operation_draft_page.
+          onPressed: () async {
+            await getIt<RootModel>().navigateToAddDraft();
           },
         ),
       ),

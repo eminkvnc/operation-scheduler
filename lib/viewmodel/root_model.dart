@@ -1,3 +1,4 @@
+import 'package:operation_reminder/screens/add_operation_draft_page.dart';
 import 'package:operation_reminder/viewmodel/base_model.dart';
 
 class RootModel extends BaseModel {
@@ -8,5 +9,10 @@ class RootModel extends BaseModel {
   set selectedBottomNavIndex(int value) {
     _selectedBottomNavIndex = value;
     notifyListeners();
+  }
+
+  Future<void> navigateToAddDraft() async {
+    await navigatorService.navigateTo(
+        routeName: AddOperationDraftPage.routeName);
   }
 }

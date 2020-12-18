@@ -9,7 +9,13 @@ class Department {
 
   factory Department.fromSnapshot(DocumentSnapshot snapshot) {
     return Department(
-        id: snapshot.data()[Constants.FIRESTORE_FIELD_DEPARTMENT_ID],
+        id: snapshot.id,
         name: snapshot.data()[Constants.FIRESTORE_FIELD_DEPARMENT_NAME]);
+  }
+  Map<String, dynamic> toMap() {
+    return {
+      Constants.FIRESTORE_FIELD_DEPARTMENT_ID: this.id,
+      Constants.FIRESTORE_FIELD_DEPARMENT_NAME: this.name
+    };
   }
 }
