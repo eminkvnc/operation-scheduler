@@ -26,11 +26,11 @@ class OperationService {
         event.docs.map((doc) => OperationDraft.fromSnapshot(doc)).toList());
   }
 
-  Stream<List<Patient>> getPatients() {
+  Future<List<Patient>> getPatients() async {
     var _ref =
         getCurrentCustomerRef().collection(Constants.FIRESTORE_COL_PATIENTS);
-    return _ref.snapshots().map((snapshot) =>
-        snapshot.docs.map((doc) => Patient.fromSnapshot(doc)).toList());
+    return await _ref.get().then(
+        (value) => value.docs.map((doc) => Patient.fromSnapshot(doc)).toList());
   }
 
   Future<Patient> getPatient(String patientId) async {

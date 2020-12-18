@@ -47,8 +47,16 @@ class AddOperationDraftModel extends BaseModel {
     await _operationService.addOperationDraft(draft);
   }
 
-  Stream<List<Patient>> getPatients() {
-    return _operationService.getPatients();
+  Future<List<Patient>> getPatients() async {
+    return await _operationService.getPatients();
+  }
+
+  Future<List<Patient>> searchPatient(String query) async {
+    List<Patient> patients = await _operationService.getPatients();
+    return patients
+        .where((patient) =>
+            patient.name.toLowerCase().contains(query.toLowerCase() ?? ''))
+        .toList();
   }
 
   Future<void> addPatient(Patient patient) async {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:operation_reminder/model/patient.dart';
 
-class AddDialog extends StatelessWidget {
+class AddPatientDialog extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
   final Patient _patient = Patient();
   @override
@@ -43,10 +43,9 @@ class AddDialog extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 16),
-              FlatButton(
+              OutlinedButton(
                 child: Text('Add Patient'),
                 onPressed: () => _saveForm(context),
-                color: Theme.of(context).accentColor,
               ),
             ],
           ),
