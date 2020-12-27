@@ -11,19 +11,51 @@ class OperationService {
     return Customer(id: 'PKMcp7B4B9YLrWYY80if', name: 'test_costomer_1');
   }
 
+  Query getDraftsQuery() {
+    return getCurrentCustomerRef()
+        .collection(Constants.FIRESTORE_COL_OPERATION_DRAFTS)
+        .where(Constants.FIRESTORE_FIELD_OPERATION_DRAFT_CUSTOMERID,
+            isEqualTo: getCurrentCustomer().id)
+        .orderBy(Constants.FIRESTORE_FIELD_OPERATION_DRAFT_PRIORITY);
+  }
+
   DocumentReference getCurrentCustomerRef() {
     return _firestore
         .collection(Constants.FIRESTORE_COL_CUSTOMERS)
         .doc(getCurrentCustomer().id);
   }
 
-  Stream<List<OperationDraft>> getOperationDrafts() {
+  Future<List<OperationDraft>> getOperationDrafts() async {
     var _ref = getCurrentCustomerRef()
         .collection(Constants.FIRESTORE_COL_OPERATION_DRAFTS)
         .where(Constants.FIRESTORE_FIELD_OPERATION_DRAFT_CUSTOMERID,
-            isEqualTo: getCurrentCustomer().id);
-    return _ref.snapshots().map((event) =>
-        event.docs.map((doc) => OperationDraft.fromSnapshot(doc)).toList());
+            isEqualTo: getCurrentCustomer().id)
+        .orderBy(Constants.FIRESTORE_FIELD_OPERATION_DRAFT_PRIORITY);
+    return _ref.get().then((value) =>
+        value.docs.map((doc) => OperationDraft.fromSnapshot(doc)).toList());
+    // return _ref.snapshots().map((event) =>
+    //     event.docs.map((doc) => OperationDraft.fromSnapshot(doc)).toList());
+  }
+
+  Future<List<QueryDocumentSnapshot>> getNextOperationDraftsPage(
+      DocumentSnapshot lastVisible, int limit) async {
+    var _ref = (lastVisible != null)
+        ? getCurrentCustomerRef()
+            .collection(Constants.FIRESTORE_COL_OPERATION_DRAFTS)
+            .where(Constants.FIRESTORE_FIELD_OPERATION_DRAFT_CUSTOMERID,
+                isEqualTo: getCurrentCustomer().id)
+            .orderBy(Constants.FIRESTORE_FIELD_OPERATION_DRAFT_PRIORITY)
+            .limit(limit)
+            .startAfterDocument(lastVisible)
+        : getCurrentCustomerRef()
+            .collection(Constants.FIRESTORE_COL_OPERATION_DRAFTS)
+            .where(Constants.FIRESTORE_FIELD_OPERATION_DRAFT_CUSTOMERID,
+                isEqualTo: getCurrentCustomer().id)
+            .orderBy(Constants.FIRESTORE_FIELD_OPERATION_DRAFT_PRIORITY)
+            .limit(limit);
+    return _ref.get().then((value) => value.docs);
+    // return _ref.snapshots().map((event) =>
+    //     event.docs.map((doc) => OperationDraft.fromSnapshot(doc)).toList());
   }
 
   Future<List<Patient>> getPatients() async {

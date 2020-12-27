@@ -49,7 +49,7 @@ class Constants {
   static const String FIRESTORE_FIELD_PATIENT_PHONE = 'phone';
 
   //Vaules
-  static const String FIRESTORE_VALUE_PRIORITY_HIGH = 'high';
-  static const String FIRESTORE_VALUE_PRIORITY_NORMAL = 'normal';
-  static const String FIRESTORE_VALUE_PRIORITY_LOW = 'low';
+  static const String FIRESTORE_VALUE_PRIORITY_HIGH = '0';
+  static const String FIRESTORE_VALUE_PRIORITY_NORMAL = '1';
+  static const String FIRESTORE_VALUE_PRIORITY_LOW = '2';
 }
