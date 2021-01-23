@@ -40,8 +40,8 @@ class HomeDraftsModel extends BaseModel {
   //   return true;
   // }
 
-  Query getDraftsQuery() {
-    return _operationService.getDraftsQuery();
+  Future<Query> getDraftsQuery() async {
+    return await _operationService.getDraftsQuery();
   }
 
   Future<Patient> getPatient(String patientId) async {

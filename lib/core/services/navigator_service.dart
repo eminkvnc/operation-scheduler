@@ -1,8 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:operation_reminder/model/doctor.dart';
 import 'package:operation_reminder/view/screens/add_operation_draft_page.dart';
 import 'package:operation_reminder/view/screens/login_page.dart';
 import 'package:operation_reminder/view/screens/root_page.dart';
+import 'package:operation_reminder/view/screens/verification_page.dart';
 
 class NavigatorService {
   final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
@@ -39,13 +41,20 @@ class NavigatorService {
         return MaterialPageRoute(builder: (context) => AddOperationDraftPage());
         break;
 
+      case VerificationPage.routeName:
+        return MaterialPageRoute(builder: (context) => VerificationPage());
+        break;
+
       default:
-        return MaterialPageRoute(builder: (context) => Container());
+        return MaterialPageRoute(
+            builder: (context) => Container(
+                  child: Center(child: Text('TEMPLATE PAGE')),
+                ));
     }
   }
 }
 
 class RootPageArgs {
-  User user;
-  RootPageArgs({@required this.user});
+  Doctor doctor;
+  RootPageArgs({@required this.doctor});
 }

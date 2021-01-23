@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:operation_reminder/core/constants.dart';
@@ -21,19 +22,27 @@ class HomeDraftsPage extends StatelessWidget {
         onRefresh: () async {
           _refreshChangeListener.refreshed = true;
         },
-        child: PaginateFirestore(
-          listeners: [
-            _refreshChangeListener,
-          ],
-          itemBuilderType: PaginateBuilderType.listView,
-          query: _model.getDraftsQuery(),
-          itemsPerPage: 5,
-          itemBuilder: (index, context, documentSnapshot) {
-            OperationDraft draft =
-                OperationDraft.fromSnapshot(documentSnapshot);
-            return OperationDraftCard(draft: draft, model: _model);
-          },
-        ),
+        child: FutureBuilder<Query>(
+            future: _model.getDraftsQuery(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return PaginateFirestore(
+                  listeners: [
+                    _refreshChangeListener,
+                  ],
+                  itemBuilderType: PaginateBuilderType.listView,
+                  query: snapshot.data,
+                  itemsPerPage: 5,
+                  itemBuilder: (index, context, documentSnapshot) {
+                    OperationDraft draft =
+                        OperationDraft.fromSnapshot(documentSnapshot);
+                    return OperationDraftCard(draft: draft, model: _model);
+                  },
+                );
+              } else {
+                return Center(child: CircularProgressIndicator());
+              }
+            }),
       ),
     );
   }

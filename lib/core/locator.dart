@@ -8,6 +8,7 @@ import 'package:operation_reminder/viewmodel/home_drafts_model.dart';
 import 'package:operation_reminder/viewmodel/home_model.dart';
 import 'package:operation_reminder/viewmodel/login_model.dart';
 import 'package:operation_reminder/viewmodel/root_model.dart';
+import 'package:operation_reminder/viewmodel/verfication_model.dart';
 import 'package:provider/provider.dart';
 
 GetIt getIt = GetIt.instance;
@@ -21,4 +22,5 @@ setupLocators() {
   getIt.registerFactory<HomeModel>(() => HomeModel());
   getIt.registerFactory<AddOperationDraftModel>(() => AddOperationDraftModel());
   getIt.registerFactory<HomeDraftsModel>(() => HomeDraftsModel());
+  getIt.registerFactory<VerificationModel>(() => VerificationModel());
 }

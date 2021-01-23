@@ -42,7 +42,7 @@ class AddOperationDraftModel extends BaseModel {
         : selectedPriorityIndex == 1
             ? Constants.FIRESTORE_VALUE_PRIORITY_NORMAL
             : Constants.FIRESTORE_VALUE_PRIORITY_HIGH;
-    draft.customerId = _operationService.getCurrentCustomer().id;
+    draft.customerId = (await _operationService.getCurrentDoctor()).customerId;
     draft.patientId = _selectedPatient.id;
     await _operationService.addOperationDraft(draft);
   }

@@ -9,17 +9,20 @@ class Doctor {
   String email;
   String grade;
   String departmentId;
-  String hospitalId;
+  String customerId;
+  bool isVerified;
 
-  Doctor(
-      {this.id,
-      this.name,
-      this.surname,
-      this.phone,
-      this.email,
-      this.grade,
-      this.departmentId,
-      this.hospitalId});
+  Doctor({
+    this.id,
+    this.name,
+    this.surname,
+    this.phone,
+    this.email,
+    this.grade,
+    this.departmentId,
+    this.customerId,
+    this.isVerified,
+  });
 
   factory Doctor.fromSnapshot(DocumentSnapshot snapshot) {
     return Doctor(
@@ -31,8 +34,10 @@ class Doctor {
         grade: snapshot.data()[Constants.FIRESTORE_FIELD_DOCTOR_GRADE],
         departmentId:
             snapshot.data()[Constants.FIRESTORE_FIELD_DOCTOR_DEPARTMENTID],
-        hospitalId:
-            snapshot.data()[Constants.FIRESTORE_FIELD_DOCTOR_HOSPITALID]);
+        customerId:
+            snapshot.data()[Constants.FIRESTORE_FIELD_DOCTOR_CUSTOMERID],
+        isVerified:
+            snapshot.data()[Constants.FIRESTORE_FIELD_DOCTOR_IS_VERIFIED]);
   }
 
   Map<String, dynamic> toMap() {
@@ -44,7 +49,8 @@ class Doctor {
       Constants.FIRESTORE_FIELD_DOCTOR_EMAIL: this.email,
       Constants.FIRESTORE_FIELD_DOCTOR_GRADE: this.grade,
       Constants.FIRESTORE_FIELD_DOCTOR_DEPARTMENTID: this.departmentId,
-      Constants.FIRESTORE_FIELD_DOCTOR_HOSPITALID: this.hospitalId
+      Constants.FIRESTORE_FIELD_DOCTOR_CUSTOMERID: this.customerId,
+      Constants.FIRESTORE_FIELD_DOCTOR_IS_VERIFIED: this.isVerified,
     };
   }
 }

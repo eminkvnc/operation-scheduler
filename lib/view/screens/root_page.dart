@@ -4,7 +4,6 @@ import 'package:operation_reminder/core/services/navigator_service.dart';
 import 'package:operation_reminder/view/screens/search_page.dart';
 import 'package:operation_reminder/view/screens/home_page.dart';
 import 'package:operation_reminder/view/screens/profile_page.dart';
-import 'package:operation_reminder/view/screens/search_page.dart';
 import 'package:operation_reminder/viewmodel/login_model.dart';
 import 'package:operation_reminder/viewmodel/root_model.dart';
 import 'package:provider/provider.dart';
@@ -24,7 +23,7 @@ class RootPage extends StatelessWidget {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: Text(_loginModel.currentUser.displayName),
+          title: Text(args.doctor.name),
           actions: [
             IconButton(
               icon: Icon(Icons.logout),

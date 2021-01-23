@@ -21,26 +21,35 @@ class _PriorityCardListState extends State<PriorityCardList> {
       mainAxisSize: MainAxisSize.max,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        PriorityCard(
-          model: widget._model,
-          index: 0,
-          onTap: () {
-            setState(() {});
-          },
+        Expanded(
+          flex: 1,
+          child: PriorityCard(
+            model: widget._model,
+            index: 0,
+            onTap: () {
+              setState(() {});
+            },
+          ),
         ),
-        PriorityCard(
-          model: widget._model,
-          index: 1,
-          onTap: () {
-            setState(() {});
-          },
+        Expanded(
+          flex: 1,
+          child: PriorityCard(
+            model: widget._model,
+            index: 1,
+            onTap: () {
+              setState(() {});
+            },
+          ),
         ),
-        PriorityCard(
-          model: widget._model,
-          index: 2,
-          onTap: () {
-            setState(() {});
-          },
+        Expanded(
+          flex: 1,
+          child: PriorityCard(
+            model: widget._model,
+            index: 2,
+            onTap: () {
+              setState(() {});
+            },
+          ),
         ),
       ],
     );
@@ -60,35 +69,33 @@ class PriorityCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: InkWell(
-        onTap: () {
-          model.selectedPriorityIndex = index;
-          onTap();
-        },
-        child: Card(
-          shape: model.selectedPriorityIndex == index
-              ? RoundedRectangleBorder(
-                  side: BorderSide(
-                      color: Theme.of(context).primaryColor, width: 4))
-              : null,
-          elevation: model.selectedPriorityIndex == index ? 5 : 1,
-          child: Container(
-            alignment: Alignment.center,
-            padding: EdgeInsets.all(12.0),
-            color: index == 0
-                ? Colors.green
+    return InkWell(
+      onTap: () {
+        model.selectedPriorityIndex = index;
+        onTap();
+      },
+      child: Card(
+        shape: model.selectedPriorityIndex == index
+            ? RoundedRectangleBorder(
+                side:
+                    BorderSide(color: Theme.of(context).primaryColor, width: 4))
+            : null,
+        elevation: model.selectedPriorityIndex == index ? 5 : 1,
+        child: Container(
+          alignment: Alignment.center,
+          padding: EdgeInsets.all(12.0),
+          color: index == 0
+              ? Colors.green
+              : index == 1
+                  ? Colors.yellow
+                  : Colors.red,
+          child: Text(
+            index == 0
+                ? 'Low\nPriority'
                 : index == 1
-                    ? Colors.yellow
-                    : Colors.red,
-            child: Text(
-              index == 0
-                  ? 'Low\nPriority'
-                  : index == 1
-                      ? 'Medium\nPriority'
-                      : 'High\nPriority',
-              textAlign: TextAlign.center,
-            ),
+                    ? 'Medium\nPriority'
+                    : 'High\nPriority',
+            textAlign: TextAlign.center,
           ),
         ),
       ),
