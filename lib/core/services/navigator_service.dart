@@ -1,7 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:operation_reminder/model/doctor.dart';
+import 'package:operation_reminder/model/draft.dart';
+import 'package:operation_reminder/model/operation.dart';
 import 'package:operation_reminder/view/screens/add_operation_draft_page.dart';
+import 'package:operation_reminder/view/screens/draft_details_page.dart';
 import 'package:operation_reminder/view/screens/login_page.dart';
 import 'package:operation_reminder/view/screens/root_page.dart';
 import 'package:operation_reminder/view/screens/verification_page.dart';
@@ -37,14 +40,17 @@ class NavigatorService {
         RootPageArgs args = settings.arguments;
         return MaterialPageRoute(builder: (context) => RootPage(args));
         break;
-      case AddOperationDraftPage.routeName:
-        return MaterialPageRoute(builder: (context) => AddOperationDraftPage());
+      case AddDraftPage.routeName:
+        return MaterialPageRoute(builder: (context) => AddDraftPage());
         break;
 
       case VerificationPage.routeName:
         return MaterialPageRoute(builder: (context) => VerificationPage());
         break;
-
+      case DraftDetailsPage.routeName:
+        DraftDetailsPageArgs args = settings.arguments;
+        return MaterialPageRoute(builder: (context) => DraftDetailsPage(args));
+        break;
       default:
         return MaterialPageRoute(
             builder: (context) => Container(
@@ -57,4 +63,10 @@ class NavigatorService {
 class RootPageArgs {
   Doctor doctor;
   RootPageArgs({@required this.doctor});
+}
+
+class DraftDetailsPageArgs {
+  Draft draft;
+  Operation operation;
+  DraftDetailsPageArgs({@required this.draft, this.operation});
 }

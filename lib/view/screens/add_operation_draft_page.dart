@@ -1,22 +1,23 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:operation_reminder/core/locator.dart';
 import 'package:operation_reminder/model/patient.dart';
-import 'package:operation_reminder/viewmodel/add_operation_draft_model.dart';
+import 'package:operation_reminder/view/widgets/item_loader_card.dart';
+import 'package:operation_reminder/viewmodel/add_draft_model.dart';
 
-import '../dialogs/patient_search.dart';
-import '../widgets/patient_card.dart';
-import '../widgets/priority_card_list.dart';
+import 'package:operation_reminder/view/dialogs/patient_search.dart';
+import 'package:operation_reminder/view/widgets/priority_card_list.dart';
 
-class AddOperationDraftPage extends StatelessWidget {
+class AddDraftPage extends StatelessWidget {
   static const String routeName = '/add_operation_draft_page';
 
   final _formKey = GlobalKey<FormState>();
 
+  final PriorityCardList priorityCardList = PriorityCardList();
+
   @override
   Widget build(BuildContext context) {
-    AddOperationDraftModel _model = getIt<AddOperationDraftModel>();
+    AddDraftModel _model = getIt<AddDraftModel>();
     return Scaffold(
       appBar: AppBar(
         title: Text('Add Draft'),
@@ -28,12 +29,11 @@ class AddOperationDraftPage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              PatientCard(
-                patient: _model.selectedPatient,
+              ItemLoaderCard<Patient>(
+                initialValue: _model.selectedPatient,
                 onTap: () async {
                   Patient patient = await showSearch<Patient>(
-                      context: context,
-                      delegate: PatientSearchDelegate(_model));
+                      context: context, delegate: PatientSearchDelegate());
                   if (patient != null) {
                     _model.selectedPatient = patient;
                   }
@@ -43,7 +43,7 @@ class AddOperationDraftPage extends StatelessWidget {
               Container(
                 padding: EdgeInsets.all(12.0),
                 height: 120,
-                child: PriorityCardList(model: _model),
+                child: priorityCardList,
               ),
               TextFormField(
                 decoration: InputDecoration(hintText: 'Description'),
@@ -52,7 +52,7 @@ class AddOperationDraftPage extends StatelessWidget {
                   if (value.isEmpty) {
                     return 'Description Required!';
                   }
-                  if (_model.selectedPriorityIndex == -1) {
+                  if (priorityCardList.selectedPriorityIndex == -1) {
                     return 'Please Select Priority!';
                   }
                   if (_model.selectedPatient == null) {
@@ -63,7 +63,7 @@ class AddOperationDraftPage extends StatelessWidget {
               ),
               SizedBox(height: 20),
               Container(
-                width: 100,
+                width: 150,
                 height: 50,
                 child: Expanded(
                   child: OutlinedButton(
@@ -71,6 +71,8 @@ class AddOperationDraftPage extends StatelessWidget {
                     onPressed: () async {
                       if (_formKey.currentState.validate()) {
                         _formKey.currentState.save();
+                        _model.selectedPriorityIndex =
+                            priorityCardList.selectedPriorityIndex;
                         await _model.addOperationDraft();
                         await _model.navigateToHome();
                       }

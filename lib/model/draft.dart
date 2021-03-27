@@ -1,22 +1,22 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:operation_reminder/core/constants.dart';
 
-class OperationDraft {
+class Draft {
   String id;
   String patientId;
-  String priority;
+  int priority;
   String description;
   String customerId;
 
-  OperationDraft(
+  Draft(
       {this.id,
       this.patientId,
       this.priority,
       this.description,
       this.customerId});
 
-  factory OperationDraft.fromSnapshot(DocumentSnapshot snapshot) {
-    return OperationDraft(
+  factory Draft.fromSnapshot(DocumentSnapshot snapshot) {
+    return Draft(
       id: snapshot.id,
       patientId:
           snapshot.data()[Constants.FIRESTORE_FIELD_OPERATION_DRAFT_PATIENTID],

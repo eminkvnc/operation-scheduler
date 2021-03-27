@@ -4,16 +4,17 @@ import 'package:operation_reminder/core/locator.dart';
 import 'package:operation_reminder/core/services/navigator_service.dart';
 import 'package:operation_reminder/core/services/operation_service.dart';
 import 'package:operation_reminder/model/draft.dart';
+import 'package:operation_reminder/model/operation.dart';
 import 'package:operation_reminder/model/patient.dart';
 import 'package:operation_reminder/view/screens/draft_details_page.dart';
 import 'package:operation_reminder/viewmodel/base_model.dart';
 
-class HomeDraftsModel extends BaseModel {
+class HomeOperationsModel extends BaseModel {
   OperationService _operationService = getIt<OperationService>();
   int _limit = 5;
   DocumentSnapshot _lastVisible;
-  List<Draft> _drafts = [];
-  List<Draft> get drafts => _drafts;
+  List<Operation> _operations = [];
+  List<Operation> get operations => _operations;
 
   //TODO: Add nextPage and previouspage methods.
   //  Use local drafts list to store data locally.
@@ -21,8 +22,8 @@ class HomeDraftsModel extends BaseModel {
   //  Use refresh listener from ui.
   //  Use page listener from ui.
 
-  Future<List<Draft>> getDrafts() async {
-    return _operationService.getOperationDrafts();
+  Future<List<Operation>> getOperations() async {
+    return _operationService.getOperations();
   }
 
   // Future<List<OperationDraft>> getNextOperationDraftsPage() async {
@@ -41,18 +42,18 @@ class HomeDraftsModel extends BaseModel {
   //   _drafts.clear();
   //   return true;
   // }
-
-  Future<Query> getDraftsQuery() async {
-    return await _operationService.getDraftsQuery();
-  }
+  //
+  // Future<Query> getDraftsQuery() async {
+  //   return await _operationService.getDraftsQuery();
+  // }
 
   Future<Patient> getPatient(String patientId) async {
     return _operationService.getPatient(patientId);
   }
 
-  Future<void> navigateToOperationDraftDetails(Draft draft) async {
+  Future<void> navigateToOperationDetails(Operation operation) async {
     return await navigatorService.navigateTo(
         routeName: DraftDetailsPage.routeName,
-        args: DraftDetailsPageArgs(draft: draft));
+        args: DraftDetailsPageArgs(draft: operation, operation: operation));
   }
 }

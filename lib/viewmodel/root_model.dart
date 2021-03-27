@@ -12,7 +12,6 @@ class RootModel extends BaseModel {
   }
 
   Future<void> navigateToAddDraft() async {
-    await navigatorService.navigateTo(
-        routeName: AddOperationDraftPage.routeName);
+    await navigatorService.navigateTo(routeName: AddDraftPage.routeName);
   }
 }

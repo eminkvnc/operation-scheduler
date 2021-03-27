@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:operation_reminder/core/locator.dart';
 import 'package:operation_reminder/model/department.dart';
 import 'package:operation_reminder/view/dialogs/department_search.dart';
-import 'package:operation_reminder/view/widgets/department_card.dart';
-import 'package:operation_reminder/viewmodel/verfication_model.dart';
+import 'package:operation_reminder/view/widgets/item_loader_card.dart';
+import 'package:operation_reminder/viewmodel/verification_model.dart';
 
 class VerificationPage extends StatelessWidget {
   static const String routeName = 'verification_page';
@@ -73,13 +73,12 @@ class VerificationPage extends StatelessWidget {
                               onSaved: (newValue) =>
                                   _model.doctor.grade = newValue,
                             ),
-                            DepartmentCard(
+                            ItemLoaderCard<Department>(
                               onTap: () async {
                                 Department department =
                                     await showSearch<Department>(
                                         context: context,
-                                        delegate:
-                                            DepartmentSearchDelegate(_model));
+                                        delegate: DepartmentSearchDelegate());
                                 if (department != null) {
                                   _model.doctor.departmentId = department.id;
                                 }

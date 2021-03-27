@@ -1,23 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:operation_reminder/core/locator.dart';
-import 'package:operation_reminder/model/department.dart';
+import 'package:operation_reminder/model/operation_room.dart';
 import 'package:operation_reminder/view/widgets/item_loader_card.dart';
 import 'package:operation_reminder/viewmodel/search_model.dart';
 
-class DepartmentSearchList extends StatelessWidget {
+class RoomSearchList extends StatelessWidget {
   final String query;
-  final Function(Department) onTap;
-  const DepartmentSearchList({Key key, this.query, @required this.onTap})
+  final String hospitalId;
+  final Function(OperationRoom) onTap;
+
+  const RoomSearchList(
+      {Key key, this.query, this.hospitalId, @required this.onTap})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final SearchModel _model = getIt<SearchModel>();
-
+    final SearchModel model = getIt<SearchModel>();
     return Scaffold(
-      body: FutureBuilder<List<Department>>(
-        future: _model.searchDepartment(query),
-        builder: (context, AsyncSnapshot<List<Department>> snapshot) {
+      // floatingActionButton: FloatingActionButton(
+      //   child: Icon(Icons.add),
+      //   onPressed: () async {
+      //     Hospital hospital = await showDialog(
+      //       context: context,
+      //       builder: (context) => AddPatientDialog(),
+      //     );
+      //     if (hospital != null) await model.addHospital(hospital);
+      //     await model.searchPatient('');
+      //   },
+      // ),
+      body: FutureBuilder(
+        future: model.searchRoom(query, hospitalId),
+        builder: (context, AsyncSnapshot<List<OperationRoom>> snapshot) {
           if (snapshot.hasError)
             return Center(
               child: Text(snapshot.error.toString()),
@@ -31,9 +44,8 @@ class DepartmentSearchList extends StatelessWidget {
           return ListView(
             padding: EdgeInsets.all(8.0),
             children: []..addAll(snapshot.data
-                .map((department) => ItemLoaderCard<Department>(
-                        initialValue: department,
-                        onTap: () => onTap(department))
+                .map((room) => ItemLoaderCard<OperationRoom>(
+                        initialValue: room, onTap: () => onTap(room))
 
                     //     Card(
                     //   margin: EdgeInsets.all(4.0),
@@ -63,7 +75,11 @@ class DepartmentSearchList extends StatelessWidget {
   }
 }
 
-class DepartmentSearchDelegate extends SearchDelegate<Department> {
+class RoomSearchDelegate extends SearchDelegate<OperationRoom> {
+  final String hospitalId;
+
+  RoomSearchDelegate(this.hospitalId);
+
   @override
   ThemeData appBarTheme(BuildContext context) {
     return Theme.of(context);
@@ -86,20 +102,22 @@ class DepartmentSearchDelegate extends SearchDelegate<Department> {
 
   @override
   Widget buildResults(BuildContext context) {
-    return DepartmentSearchList(
+    return RoomSearchList(
       query: query,
-      onTap: (department) {
-        close(context, department);
+      hospitalId: hospitalId,
+      onTap: (room) {
+        close(context, room);
       },
     );
   }
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    return DepartmentSearchList(
+    return RoomSearchList(
       query: query,
-      onTap: (department) {
-        close(context, department);
+      hospitalId: hospitalId,
+      onTap: (room) {
+        close(context, room);
       },
     );
   }

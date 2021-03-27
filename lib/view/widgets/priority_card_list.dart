@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:operation_reminder/viewmodel/add_operation_draft_model.dart';
+import 'package:operation_reminder/core/constants.dart';
+import 'package:operation_reminder/viewmodel/add_draft_model.dart';
 
 class PriorityCardList extends StatefulWidget {
-  const PriorityCardList({
+  PriorityCardList({
     Key key,
-    @required AddOperationDraftModel model,
-  })  : _model = model,
-        super(key: key);
+    this.selectedPriorityIndex,
+  }) : super(key: key);
 
-  final AddOperationDraftModel _model;
+  int selectedPriorityIndex = -1;
 
   @override
   _PriorityCardListState createState() => _PriorityCardListState();
@@ -24,30 +24,36 @@ class _PriorityCardListState extends State<PriorityCardList> {
         Expanded(
           flex: 1,
           child: PriorityCard(
-            model: widget._model,
             index: 0,
-            onTap: () {
-              setState(() {});
+            selectedIndex: widget.selectedPriorityIndex,
+            onTap: (selectedPriorityIndex) {
+              setState(() {
+                widget.selectedPriorityIndex = selectedPriorityIndex;
+              });
             },
           ),
         ),
         Expanded(
           flex: 1,
           child: PriorityCard(
-            model: widget._model,
             index: 1,
-            onTap: () {
-              setState(() {});
+            selectedIndex: widget.selectedPriorityIndex,
+            onTap: (selectedPriorityIndex) {
+              setState(() {
+                widget.selectedPriorityIndex = selectedPriorityIndex;
+              });
             },
           ),
         ),
         Expanded(
           flex: 1,
           child: PriorityCard(
-            model: widget._model,
             index: 2,
-            onTap: () {
-              setState(() {});
+            selectedIndex: widget.selectedPriorityIndex,
+            onTap: (selectedPriorityIndex) {
+              setState(() {
+                widget.selectedPriorityIndex = selectedPriorityIndex;
+              });
             },
           ),
         ),
@@ -58,41 +64,40 @@ class _PriorityCardListState extends State<PriorityCardList> {
 
 class PriorityCard extends StatelessWidget {
   final int index;
-  final AddOperationDraftModel model;
-  final Function() onTap;
+  final Function(int) onTap;
+  final int selectedIndex;
   const PriorityCard({
     Key key,
-    @required this.model,
     @required this.index,
     @required this.onTap,
+    @required this.selectedIndex,
   });
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        model.selectedPriorityIndex = index;
-        onTap();
+        onTap(index);
       },
       child: Card(
-        shape: model.selectedPriorityIndex == index
+        shape: selectedIndex == index
             ? RoundedRectangleBorder(
                 side:
                     BorderSide(color: Theme.of(context).primaryColor, width: 4))
             : null,
-        elevation: model.selectedPriorityIndex == index ? 5 : 1,
+        elevation: selectedIndex == index ? 5 : 1,
         child: Container(
           alignment: Alignment.center,
           padding: EdgeInsets.all(12.0),
-          color: index == 0
+          color: index == Constants.FIRESTORE_VALUE_PRIORITY_LOW
               ? Colors.green
-              : index == 1
+              : index == Constants.FIRESTORE_VALUE_PRIORITY_NORMAL
                   ? Colors.yellow
                   : Colors.red,
           child: Text(
-            index == 0
+            index == Constants.FIRESTORE_VALUE_PRIORITY_LOW
                 ? 'Low\nPriority'
-                : index == 1
+                : index == Constants.FIRESTORE_VALUE_PRIORITY_NORMAL
                     ? 'Medium\nPriority'
                     : 'High\nPriority',
             textAlign: TextAlign.center,

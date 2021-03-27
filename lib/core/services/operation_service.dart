@@ -4,7 +4,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:operation_reminder/core/constants.dart';
 import 'package:operation_reminder/model/department.dart';
 import 'package:operation_reminder/model/doctor.dart';
-import 'package:operation_reminder/model/operation_draft.dart';
+import 'package:operation_reminder/model/draft.dart';
+import 'package:operation_reminder/model/hospital.dart';
+import 'package:operation_reminder/model/operation.dart';
+import 'package:operation_reminder/model/operation_room.dart';
 import 'package:operation_reminder/model/patient.dart';
 
 class OperationService {
@@ -36,12 +39,12 @@ class OperationService {
         .doc(doctor.customerId);
   }
 
-  Future<List<OperationDraft>> getOperationDrafts() async {
+  Future<List<Draft>> getOperationDrafts() async {
     var _ref = (await getCurrentCustomerRef())
         .collection(Constants.FIRESTORE_COL_OPERATION_DRAFTS)
         .orderBy(Constants.FIRESTORE_FIELD_OPERATION_DRAFT_PRIORITY);
-    return _ref.get().then((value) =>
-        value.docs.map((doc) => OperationDraft.fromSnapshot(doc)).toList());
+    return _ref.get().then(
+        (value) => value.docs.map((doc) => Draft.fromSnapshot(doc)).toList());
     // return _ref.snapshots().map((event) =>
     //     event.docs.map((doc) => OperationDraft.fromSnapshot(doc)).toList());
   }
@@ -68,6 +71,20 @@ class OperationService {
     //     event.docs.map((doc) => OperationDraft.fromSnapshot(doc)).toList());
   }
 
+  Future<List<Operation>> getOperations() async {
+    var _ref = (await getCurrentCustomerRef())
+        .collection(Constants.FIRESTORE_COL_OPERATIONS)
+        .orderBy(Constants.FIRESTORE_FIELD_OPERATION_DRAFT_PRIORITY);
+    return _ref.get().then((value) {
+      return value.docs.map((doc) {
+        print(Operation.fromSnapshot(doc));
+        return Operation.fromSnapshot(doc);
+      }).toList();
+    });
+    // return _ref.snapshots().map((event) =>
+    //     event.docs.map((doc) => Operation.fromSnapshot(doc)).toList());
+  }
+
   Future<List<Patient>> getPatients() async {
     var _ref = (await getCurrentCustomerRef())
         .collection(Constants.FIRESTORE_COL_PATIENTS);
@@ -89,10 +106,22 @@ class OperationService {
         .set(patient.toMap());
   }
 
-  Future<void> addOperationDraft(OperationDraft draft) async {
+  Future<void> addOperationDraft(Draft draft) async {
     var _ref = (await getCurrentCustomerRef())
         .collection(Constants.FIRESTORE_COL_OPERATION_DRAFTS);
-    await _ref.add(draft.toMap());
+    await _ref.doc(draft.id).set(draft.toMap(), SetOptions(merge: true));
+  }
+
+  Future<void> addOperation(Operation operation) async {
+    var _ref = (await getCurrentCustomerRef())
+        .collection(Constants.FIRESTORE_COL_OPERATIONS);
+    await _ref
+        .doc(operation.id)
+        .set(operation.toMap(), SetOptions(merge: true));
+    await (await getCurrentCustomerRef())
+        .collection(Constants.FIRESTORE_COL_OPERATION_DRAFTS)
+        .doc(operation.id)
+        .delete();
   }
 
   Future<Doctor> getDoctorWithId(String doctorId) async {
@@ -106,7 +135,7 @@ class OperationService {
   Future<void> saveDoctorData(Doctor doctor) async {
     await _firestore
         .collection(Constants.FIRESTORE_COL_DOCTORS)
-        .doc()
+        .doc(doctor.id)
         .set(doctor.toMap(), SetOptions(merge: true));
   }
 
@@ -142,5 +171,47 @@ class OperationService {
     var _ref = _firestore.collection(Constants.FIRESTORE_COL_DEPARTMENTS);
     return await _ref.get().then((value) =>
         value.docs.map((doc) => Department.fromSnapshot(doc)).toList());
+  }
+
+  Future<List<Hospital>> getHospitals() async {
+    var _ref = (await getCurrentCustomerRef())
+        .collection(Constants.FIRESTORE_COL_HOSPITALS);
+    return await _ref.get().then((value) =>
+        value.docs.map((doc) => Hospital.fromSnapshot(doc)).toList());
+  }
+
+  Future<List<OperationRoom>> getRoomsWithHospitalId(String hospitalId) async {
+    var _ref = (await getCurrentCustomerRef())
+        .collection(Constants.FIRESTORE_COL_HOSPITALS)
+        .doc(hospitalId)
+        .collection(Constants.FIRESTORE_COL_OPERATION_ROOMS);
+    return await _ref.get().then((value) => value.docs.map((doc) {
+          OperationRoom r = OperationRoom.fromSnapshot(doc);
+          r.hospitalId = hospitalId;
+          return r;
+        }).toList());
+  }
+
+  Future<Hospital> getHospital(String hospitalId) async {
+    return Hospital.fromSnapshot(await (await getCurrentCustomerRef())
+        .collection(Constants.FIRESTORE_COL_HOSPITALS)
+        .doc(hospitalId)
+        .get());
+  }
+
+  Future<OperationRoom> getRoom(String roomId, String hospitalId) async {
+    return OperationRoom.fromSnapshot(await (await getCurrentCustomerRef())
+        .collection(Constants.FIRESTORE_COL_HOSPITALS)
+        .doc(hospitalId)
+        .collection(Constants.FIRESTORE_COL_OPERATION_ROOMS)
+        .doc(roomId)
+        .get());
+  }
+
+  Future<Department> getDepartment(String departmentId) async {
+    return Department.fromSnapshot(await _firestore
+        .collection(Constants.FIRESTORE_COL_DEPARTMENTS)
+        .doc(departmentId)
+        .get());
   }
 }

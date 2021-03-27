@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:operation_reminder/core/locator.dart';
 import 'package:operation_reminder/model/patient.dart';
 import 'package:operation_reminder/view/dialogs/add_patient_dialog.dart';
-import 'package:operation_reminder/view/widgets/patient_card.dart';
-import 'package:operation_reminder/viewmodel/add_operation_draft_model.dart';
+import 'package:operation_reminder/view/widgets/item_loader_card.dart';
+import 'package:operation_reminder/viewmodel/search_model.dart';
 
 class PatientSearchList extends StatelessWidget {
   final String query;
-  final AddOperationDraftModel model;
   final Function(Patient) onTap;
 
-  const PatientSearchList(
-      {Key key, this.query, @required this.model, @required this.onTap})
+  const PatientSearchList({Key key, this.query, @required this.onTap})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final SearchModel model = getIt<SearchModel>();
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
@@ -43,8 +43,8 @@ class PatientSearchList extends StatelessWidget {
           return ListView(
             padding: EdgeInsets.all(8.0),
             children: []..addAll(snapshot.data
-                .map((patient) => PatientCard(
-                        patient: patient, onTap: () => onTap(patient))
+                .map((patient) => ItemLoaderCard<Patient>(
+                        initialValue: patient, onTap: () => onTap(patient))
 
                     //     Card(
                     //   margin: EdgeInsets.all(4.0),
@@ -75,10 +75,6 @@ class PatientSearchList extends StatelessWidget {
 }
 
 class PatientSearchDelegate extends SearchDelegate<Patient> {
-  final AddOperationDraftModel _model;
-
-  PatientSearchDelegate(this._model);
-
   @override
   ThemeData appBarTheme(BuildContext context) {
     return Theme.of(context);
@@ -103,7 +99,6 @@ class PatientSearchDelegate extends SearchDelegate<Patient> {
   Widget buildResults(BuildContext context) {
     return PatientSearchList(
       query: query,
-      model: _model,
       onTap: (patient) {
         close(context, patient);
       },
@@ -114,7 +109,6 @@ class PatientSearchDelegate extends SearchDelegate<Patient> {
   Widget buildSuggestions(BuildContext context) {
     return PatientSearchList(
       query: query,
-      model: _model,
       onTap: (patient) {
         close(context, patient);
       },
