@@ -46,4 +46,16 @@ class SearchModel extends BaseModel {
   Future<void> addPatient(Patient patient) async {
     await _operationService.addPatient(patient);
   }
+
+  Future<void> addRoom(OperationRoom room, String hospitalId) async {
+    await _operationService.addRoom(room, hospitalId);
+  }
+
+  Future<void> addHospital(Hospital hospital) async {
+    await _operationService.addHospital(hospital);
+  }
+
+  Future<void> addDepartment(Department department) async {
+    await _operationService.addDepartment(department);
+  }
 }

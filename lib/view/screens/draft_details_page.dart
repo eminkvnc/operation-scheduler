@@ -52,150 +52,154 @@ class DraftDetailsPage extends StatelessWidget {
       ),
       body: Padding(
         padding: const EdgeInsets.all(12.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              ItemLoaderCard<Patient>(
-                future: _model.getPatient(draft.patientId),
-                onTap: () {
-                  return null;
-                },
-              ),
-              Container(
-                padding: EdgeInsets.all(12.0),
-                height: 120,
-                child: priorityCardList,
-              ),
-              TextFormField(
-                decoration: InputDecoration(hintText: 'Select Date - Time'),
-                controller: _dateTimeTextController,
-                readOnly: true,
-                validator: (value) {
-                  if (_model.selectedDate == null) {
-                    return 'Please Select Date!';
-                  }
-                  return null;
-                },
-                onTap: () {
-                  DatePicker.showDateTimePicker(
-                    context,
-                    minTime: DateTime.now(),
-                    maxTime: DateTime.now().add(Duration(days: 50 * 365)),
-                    currentTime: DateTime.now(),
-                    locale: LocaleType.tr,
-                    showTitleActions: true,
-                    onConfirm: (time) async {
-                      initializeDateFormatting('tr_TR', null).then((_) {
-                        DateFormat dateFormat =
-                            DateFormat("dd.MM.yyyy - HH:mm, EEEE ", 'tr_TR');
-                        _dateTimeTextController.text = dateFormat.format(time);
-                      });
-                      _model.selectedDate = time.millisecondsSinceEpoch;
-                    },
-                  );
-                },
-              ),
-              ItemLoaderCard<Hospital>(
-                future: operation != null
-                    ? _model.getHospital(operation.hospitalId)
-                    : null,
-                onComplete: (h) => _model.selectedHospital = h,
-                onTap: () async {
-                  Hospital hospital = await showSearch<Hospital>(
-                      context: context, delegate: HospitalSearchDelegate());
-                  if (hospital != null) {
-                    _model.selectedHospital = hospital;
-                  }
-                  return hospital;
-                },
-              ),
-              ItemLoaderCard<OperationRoom>(
-                future: operation != null
-                    ? _model.getRoom(operation.roomId, operation.hospitalId)
-                    : null,
-                onComplete: (r) => _model.selectedRoom = r,
-                onTap: () async {
-                  if (_model.selectedHospital != null) {
-                    OperationRoom room = await showSearch<OperationRoom>(
-                        context: context,
-                        delegate:
-                            RoomSearchDelegate(_model.selectedHospital.id));
-                    if (room != null) {
-                      _model.selectedRoom = room;
-                    }
-                    return room;
-                  } else {
-                    Toast.show('Please Select Hospital First!', context,
-                        duration: Toast.LENGTH_LONG);
+        child: SingleChildScrollView(
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                ItemLoaderCard<Patient>(
+                  future: _model.getPatient(draft.patientId),
+                  onTap: () {
                     return null;
-                  }
-                },
-              ),
-              ItemLoaderCard<Department>(
-                future: operation != null
-                    ? _model.getDepartment(operation.departmentId)
-                    : null,
-                onComplete: (d) => _model.selectedDepartment = d,
-                onTap: () async {
-                  Department department = await showSearch<Department>(
-                      context: context, delegate: DepartmentSearchDelegate());
-                  if (department != null) {
-                    _model.selectedDepartment = department;
-                  }
-                  return department;
-                },
-              ),
-              TextFormField(
-                controller: _descriptionTextController,
-                decoration: InputDecoration(hintText: 'Description'),
-                onSaved: (value) => draft.description = value,
-                validator: (value) {
-                  if (value.isEmpty) {
-                    return 'Description Required!';
-                  }
-                  if (priorityCardList.selectedPriorityIndex == -1) {
-                    return 'Please Select Priority!';
-                  }
-                  if (draft.patientId == null) {
-                    return 'Please Select Patient!';
-                  }
-                  if (_model.selectedHospital == null) {
-                    return 'Please Select Hospital!';
-                  }
-                  if (_model.selectedRoom == null) {
-                    return 'Please Select Room!';
-                  }
-                  if (_model.selectedDepartment == null) {
-                    return 'Please Select Department!';
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(height: 20),
-              Container(
-                width: 150,
-                height: 50,
-                child: Expanded(
-                  child: OutlinedButton(
-                    child: Text('Save Operation'),
-                    onPressed: () async {
-                      if (_formKey.currentState.validate()) {
-                        _formKey.currentState.save();
-                        draft.priority = priorityCardList.selectedPriorityIndex;
-                        _model.draft = draft;
-                        if (operation != null) {
-                          _model.draft = operation;
-                        }
-                        await _model.addOperation();
-                        await _model.navigateToHome();
+                  },
+                ),
+                Container(
+                  padding: EdgeInsets.all(12.0),
+                  height: 120,
+                  child: priorityCardList,
+                ),
+                TextFormField(
+                  decoration: InputDecoration(hintText: 'Select Date - Time'),
+                  controller: _dateTimeTextController,
+                  readOnly: true,
+                  validator: (value) {
+                    if (_model.selectedDate == null) {
+                      return 'Please Select Date!';
+                    }
+                    return null;
+                  },
+                  onTap: () {
+                    DatePicker.showDateTimePicker(
+                      context,
+                      minTime: DateTime.now(),
+                      maxTime: DateTime.now().add(Duration(days: 50 * 365)),
+                      currentTime: DateTime.now(),
+                      locale: LocaleType.tr,
+                      showTitleActions: true,
+                      onConfirm: (time) async {
+                        initializeDateFormatting('tr_TR', null).then((_) {
+                          DateFormat dateFormat =
+                              DateFormat("dd.MM.yyyy - HH:mm, EEEE ", 'tr_TR');
+                          _dateTimeTextController.text =
+                              dateFormat.format(time);
+                        });
+                        _model.selectedDate = time.millisecondsSinceEpoch;
+                      },
+                    );
+                  },
+                ),
+                ItemLoaderCard<Hospital>(
+                  future: operation != null
+                      ? _model.getHospital(operation.hospitalId)
+                      : null,
+                  onComplete: (h) => _model.selectedHospital = h,
+                  onTap: () async {
+                    Hospital hospital = await showSearch<Hospital>(
+                        context: context, delegate: HospitalSearchDelegate());
+                    if (hospital != null) {
+                      _model.selectedHospital = hospital;
+                    }
+                    return hospital;
+                  },
+                ),
+                ItemLoaderCard<OperationRoom>(
+                  future: operation != null
+                      ? _model.getRoom(operation.roomId, operation.hospitalId)
+                      : null,
+                  onComplete: (r) => _model.selectedRoom = r,
+                  onTap: () async {
+                    if (_model.selectedHospital != null) {
+                      OperationRoom room = await showSearch<OperationRoom>(
+                          context: context,
+                          delegate:
+                              RoomSearchDelegate(_model.selectedHospital.id));
+                      if (room != null) {
+                        _model.selectedRoom = room;
                       }
-                    },
+                      return room;
+                    } else {
+                      Toast.show('Please Select Hospital First!', context,
+                          duration: Toast.LENGTH_LONG);
+                      return null;
+                    }
+                  },
+                ),
+                ItemLoaderCard<Department>(
+                  future: operation != null
+                      ? _model.getDepartment(operation.departmentId)
+                      : null,
+                  onComplete: (d) => _model.selectedDepartment = d,
+                  onTap: () async {
+                    Department department = await showSearch<Department>(
+                        context: context, delegate: DepartmentSearchDelegate());
+                    if (department != null) {
+                      _model.selectedDepartment = department;
+                    }
+                    return department;
+                  },
+                ),
+                TextFormField(
+                  controller: _descriptionTextController,
+                  decoration: InputDecoration(hintText: 'Description'),
+                  onSaved: (value) => draft.description = value,
+                  validator: (value) {
+                    if (value.isEmpty) {
+                      return 'Description Required!';
+                    }
+                    if (priorityCardList.selectedPriorityIndex == -1) {
+                      return 'Please Select Priority!';
+                    }
+                    if (draft.patientId == null) {
+                      return 'Please Select Patient!';
+                    }
+                    if (_model.selectedHospital == null) {
+                      return 'Please Select Hospital!';
+                    }
+                    if (_model.selectedRoom == null) {
+                      return 'Please Select Room!';
+                    }
+                    if (_model.selectedDepartment == null) {
+                      return 'Please Select Department!';
+                    }
+                    return null;
+                  },
+                ),
+                SizedBox(height: 20),
+                Container(
+                  width: 150,
+                  height: 50,
+                  child: Expanded(
+                    child: OutlinedButton(
+                      child: Text('Save Operation'),
+                      onPressed: () async {
+                        if (_formKey.currentState.validate()) {
+                          _formKey.currentState.save();
+                          draft.priority =
+                              priorityCardList.selectedPriorityIndex;
+                          _model.draft = draft;
+                          if (operation != null) {
+                            _model.draft = operation;
+                          }
+                          await _model.addOperation();
+                          await _model.navigateToHome();
+                        }
+                      },
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

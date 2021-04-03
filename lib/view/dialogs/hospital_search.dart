@@ -4,6 +4,8 @@ import 'package:operation_reminder/model/hospital.dart';
 import 'package:operation_reminder/view/widgets/item_loader_card.dart';
 import 'package:operation_reminder/viewmodel/search_model.dart';
 
+import 'add_hospital_dialog.dart';
+
 class HospitalSearchList extends StatelessWidget {
   final String query;
   final Function(Hospital) onTap;
@@ -15,17 +17,17 @@ class HospitalSearchList extends StatelessWidget {
   Widget build(BuildContext context) {
     final SearchModel model = getIt<SearchModel>();
     return Scaffold(
-      // floatingActionButton: FloatingActionButton(
-      //   child: Icon(Icons.add),
-      //   onPressed: () async {
-      //     Hospital hospital = await showDialog(
-      //       context: context,
-      //       builder: (context) => AddPatientDialog(),
-      //     );
-      //     if (hospital != null) await model.addHospital(hospital);
-      //     await model.searchPatient('');
-      //   },
-      // ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add),
+        onPressed: () async {
+          Hospital hospital = await showDialog(
+            context: context,
+            builder: (context) => AddHospitalDialog(),
+          );
+          if (hospital != null) await model.addHospital(hospital);
+          await model.searchHospital('');
+        },
+      ),
       body: FutureBuilder(
         future: model.searchHospital(query),
         builder: (context, AsyncSnapshot<List<Hospital>> snapshot) {

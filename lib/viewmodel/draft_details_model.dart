@@ -56,6 +56,7 @@ class DraftDetailsModel extends BaseModel {
 
   set selectedHospital(Hospital value) {
     _selectedHospital = value;
+    _selectedRoom = null;
   }
 
   Future<Patient> getPatient(String patientId) async {

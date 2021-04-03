@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:operation_reminder/core/locator.dart';
 import 'package:operation_reminder/model/department.dart';
+import 'package:operation_reminder/view/dialogs/add_department_dialog.dart';
 import 'package:operation_reminder/view/widgets/item_loader_card.dart';
 import 'package:operation_reminder/viewmodel/search_model.dart';
 
@@ -15,6 +16,17 @@ class DepartmentSearchList extends StatelessWidget {
     final SearchModel _model = getIt<SearchModel>();
 
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add),
+        onPressed: () async {
+          Department department = await showDialog(
+            context: context,
+            builder: (context) => AddDepartmentDialog(),
+          );
+          if (department != null) await _model.addDepartment(department);
+          await _model.searchDepartment('');
+        },
+      ),
       body: FutureBuilder<List<Department>>(
         future: _model.searchDepartment(query),
         builder: (context, AsyncSnapshot<List<Department>> snapshot) {

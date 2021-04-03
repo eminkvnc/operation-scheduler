@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:operation_reminder/core/constants.dart';
 import 'package:operation_reminder/model/department.dart';
 import 'package:operation_reminder/model/doctor.dart';
@@ -106,6 +107,29 @@ class OperationService {
         .set(patient.toMap());
   }
 
+  Future<void> addDepartment(Department department) async {
+    await (await getCurrentCustomerRef())
+        .collection(Constants.FIRESTORE_COL_DEPARTMENTS)
+        .doc(department.id)
+        .set(department.toMap());
+  }
+
+  Future<void> addHospital(Hospital hospital) async {
+    await (await getCurrentCustomerRef())
+        .collection(Constants.FIRESTORE_COL_HOSPITALS)
+        .doc(hospital.id)
+        .set(hospital.toMap());
+  }
+
+  Future<void> addRoom(OperationRoom room, String hospitalId) async {
+    await (await getCurrentCustomerRef())
+        .collection(Constants.FIRESTORE_COL_HOSPITALS)
+        .doc(hospitalId)
+        .collection(Constants.FIRESTORE_COL_OPERATION_ROOMS)
+        .doc(room.id)
+        .set(room.toMap());
+  }
+
   Future<void> addOperationDraft(Draft draft) async {
     var _ref = (await getCurrentCustomerRef())
         .collection(Constants.FIRESTORE_COL_OPERATION_DRAFTS);
@@ -168,7 +192,8 @@ class OperationService {
   }
 
   Future<List<Department>> getDepartments() async {
-    var _ref = _firestore.collection(Constants.FIRESTORE_COL_DEPARTMENTS);
+    var _ref = (await getCurrentCustomerRef())
+        .collection(Constants.FIRESTORE_COL_DEPARTMENTS);
     return await _ref.get().then((value) =>
         value.docs.map((doc) => Department.fromSnapshot(doc)).toList());
   }
@@ -209,7 +234,7 @@ class OperationService {
   }
 
   Future<Department> getDepartment(String departmentId) async {
-    return Department.fromSnapshot(await _firestore
+    return Department.fromSnapshot(await (await getCurrentCustomerRef())
         .collection(Constants.FIRESTORE_COL_DEPARTMENTS)
         .doc(departmentId)
         .get());

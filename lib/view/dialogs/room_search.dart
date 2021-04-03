@@ -4,6 +4,8 @@ import 'package:operation_reminder/model/operation_room.dart';
 import 'package:operation_reminder/view/widgets/item_loader_card.dart';
 import 'package:operation_reminder/viewmodel/search_model.dart';
 
+import 'add_room_dialog.dart';
+
 class RoomSearchList extends StatelessWidget {
   final String query;
   final String hospitalId;
@@ -17,17 +19,17 @@ class RoomSearchList extends StatelessWidget {
   Widget build(BuildContext context) {
     final SearchModel model = getIt<SearchModel>();
     return Scaffold(
-      // floatingActionButton: FloatingActionButton(
-      //   child: Icon(Icons.add),
-      //   onPressed: () async {
-      //     Hospital hospital = await showDialog(
-      //       context: context,
-      //       builder: (context) => AddPatientDialog(),
-      //     );
-      //     if (hospital != null) await model.addHospital(hospital);
-      //     await model.searchPatient('');
-      //   },
-      // ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add),
+        onPressed: () async {
+          OperationRoom room = await showDialog(
+            context: context,
+            builder: (context) => AddRoomDialog(hospitalId),
+          );
+          if (room != null) await model.addRoom(room, hospitalId);
+          await model.searchRoom('', hospitalId);
+        },
+      ),
       body: FutureBuilder(
         future: model.searchRoom(query, hospitalId),
         builder: (context, AsyncSnapshot<List<OperationRoom>> snapshot) {
