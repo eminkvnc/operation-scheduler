@@ -156,6 +156,13 @@ class OperationService {
     return _snapshot.exists ? Doctor.fromSnapshot(_snapshot) : null;
   }
 
+  Future<List<Doctor>> getDoctors() async {
+    String customerId = (await getCurrentCustomerRef()).id;
+    var _ref = _firestore.collection(Constants.FIRESTORE_COL_DOCTORS);
+    return await _ref.where('customer_id', isEqualTo: customerId).get().then(
+        (value) => value.docs.map((doc) => Doctor.fromSnapshot(doc)).toList());
+  }
+
   Future<void> saveDoctorData(Doctor doctor) async {
     await _firestore
         .collection(Constants.FIRESTORE_COL_DOCTORS)

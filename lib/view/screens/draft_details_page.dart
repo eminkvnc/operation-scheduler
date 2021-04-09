@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:operation_reminder/core/locator.dart';
 import 'package:operation_reminder/core/services/navigator_service.dart';
 import 'package:operation_reminder/model/department.dart';
+import 'package:operation_reminder/model/doctor.dart';
 import 'package:operation_reminder/model/draft.dart';
 import 'package:operation_reminder/model/hospital.dart';
 import 'package:operation_reminder/model/operation.dart';
@@ -16,6 +17,7 @@ import 'package:operation_reminder/view/widgets/item_loader_card.dart';
 import 'package:operation_reminder/view/widgets/priority_card_list.dart';
 import 'package:operation_reminder/viewmodel/draft_details_model.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:smart_select/smart_select.dart';
 import 'package:toast/toast.dart';
 
 class DraftDetailsPage extends StatelessWidget {
@@ -172,7 +174,41 @@ class DraftDetailsPage extends StatelessWidget {
                     if (_model.selectedDepartment == null) {
                       return 'Please Select Department!';
                     }
+                    if (_model.selectedDoctors == null ||
+                        _model.selectedDoctors.isEmpty) {
+                      return 'Please Select Doctor!';
+                    }
                     return null;
+                  },
+                ),
+                FutureBuilder<List<Doctor>>(
+                  future: _model.getDoctors(),
+                  builder: (context, snapshot) {
+                    return snapshot.hasData
+                        ? SmartSelect<Doctor>.multiple(
+                            title: 'Doctors',
+                            value:
+                                operation != null && operation.doctorIds != null
+                                    ? snapshot.data
+                                        .where((element) => operation.doctorIds
+                                            .contains(element.id))
+                                        .toList()
+                                    : [],
+                            choiceItems: S2Choice.listFrom<Doctor, Doctor>(
+                              source: snapshot.data,
+                              value: (index, item) => item,
+                              title: (index, item) => item.name,
+                            ),
+                            tileBuilder: (context, value) {
+                              return S2ChipsTile.fromState(value);
+                            },
+                            onChange: (value) {
+                              _model.selectedDoctors = value.value;
+                            },
+                            choiceType: S2ChoiceType.chips,
+                            modalType: S2ModalType.bottomSheet,
+                          )
+                        : Center(child: CircularProgressIndicator());
                   },
                 ),
                 SizedBox(height: 20),

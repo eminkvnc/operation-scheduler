@@ -40,6 +40,7 @@ class Constants {
   static const String FIRESTORE_FIELD_OPERATION_HOSPITALID = 'hospital_id';
   static const String FIRESTORE_FIELD_OPERATION_DATE = 'date';
   static const String FIRESTORE_FIELD_OPERATION_DEPARTMENTID = 'department_id';
+  static const String FIRESTORE_FIELD_OPERATION_DOCTOR_IDS = 'doctor_ids';
   //Operation_draft Fields
   static const String FIRESTORE_FIELD_OPERATION_DRAFT_ID = 'id';
   static const String FIRESTORE_FIELD_OPERATION_DRAFT_PATIENTID = 'patient_id';

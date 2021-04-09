@@ -1,6 +1,7 @@
 import 'package:operation_reminder/core/locator.dart';
 import 'package:operation_reminder/core/services/operation_service.dart';
 import 'package:operation_reminder/model/department.dart';
+import 'package:operation_reminder/model/doctor.dart';
 import 'package:operation_reminder/model/draft.dart';
 import 'package:operation_reminder/model/hospital.dart';
 import 'package:operation_reminder/model/operation.dart';
@@ -17,6 +18,7 @@ class DraftDetailsModel extends BaseModel {
   OperationRoom _selectedRoom;
   Department _selectedDepartment;
   int _selectedDate;
+  List<Doctor> _selectedDoctors;
 
   Future<void> addOperation() async {
     Operation operation = Operation(
@@ -24,7 +26,8 @@ class DraftDetailsModel extends BaseModel {
         date: _selectedDate,
         roomId: selectedRoom.id,
         departmentId: _selectedDepartment.id,
-        hospitalId: _selectedHospital.id);
+        hospitalId: _selectedHospital.id,
+        doctorIds: _selectedDoctors.map<String>((e) => e.id).toList());
 
     await _operationService.addOperation(operation);
   }
@@ -75,6 +78,10 @@ class DraftDetailsModel extends BaseModel {
     return _operationService.getDepartment(departmentId);
   }
 
+  Future<List<Doctor>> getDoctors() async {
+    return _operationService.getDoctors();
+  }
+
   OperationRoom get selectedRoom => _selectedRoom;
 
   set selectedRoom(OperationRoom value) {
@@ -85,5 +92,11 @@ class DraftDetailsModel extends BaseModel {
 
   set selectedDate(int value) {
     _selectedDate = value;
+  }
+
+  List<Doctor> get selectedDoctors => _selectedDoctors;
+
+  set selectedDoctors(List<Doctor> value) {
+    _selectedDoctors = value;
   }
 }
