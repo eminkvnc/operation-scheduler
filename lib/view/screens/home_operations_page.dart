@@ -11,15 +11,18 @@ class HomeOperationsPage extends StatelessWidget {
     HomeOperationsModel _model = getIt<HomeOperationsModel>();
     return Scaffold(
       body: RefreshViewWithFuture(
-        model: _model,
+        future: _model.getOperations(),
         builder: (operations) {
           print(operations);
           return GridView.count(
             crossAxisCount: 2,
             children: List.generate(
                 operations.length,
-                (index) =>
-                    OperationCard(operation: operations[index], model: _model)),
+                (index) => OperationCard(
+                      operation: operations[index],
+                      onTap: () =>
+                          _model.navigateToOperationDetails(operations[index]),
+                    )),
           );
         },
       ),
@@ -30,13 +33,13 @@ class HomeOperationsPage extends StatelessWidget {
 class RefreshViewWithFuture extends StatefulWidget {
   const RefreshViewWithFuture({
     Key key,
-    @required HomeOperationsModel model,
+    @required Future future,
     @required Widget Function(List<Operation>) builder,
   })  : _builder = builder,
-        _model = model,
+        _future = future,
         super(key: key);
 
-  final HomeOperationsModel _model;
+  final Future _future;
   final Widget Function(List<Operation>) _builder;
 
   @override
@@ -48,10 +51,10 @@ class _RefreshViewWithFutureState extends State<RefreshViewWithFuture> {
 
   @override
   Widget build(BuildContext context) {
-    _future = widget._model.getOperations();
+    _future = widget._future;
     return RefreshIndicator(
       onRefresh: () async {
-        _future = widget._model.getOperations();
+        _future = widget._future;
         setState(() {});
       },
       child: FutureBuilder<List<Operation>>(

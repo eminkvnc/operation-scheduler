@@ -9,6 +9,8 @@ import 'package:operation_reminder/viewmodel/home_drafts_model.dart';
 import 'package:operation_reminder/viewmodel/home_model.dart';
 import 'package:operation_reminder/viewmodel/home_operations_model.dart';
 import 'package:operation_reminder/viewmodel/login_model.dart';
+import 'package:operation_reminder/viewmodel/operation_details_model.dart';
+import 'package:operation_reminder/viewmodel/profile_model.dart';
 import 'package:operation_reminder/viewmodel/root_model.dart';
 import 'package:operation_reminder/viewmodel/search_model.dart';
 import 'package:operation_reminder/viewmodel/verification_model.dart';
@@ -28,5 +30,7 @@ setupLocators() {
   getIt.registerFactory<HomeOperationsModel>(() => HomeOperationsModel());
   getIt.registerFactory<VerificationModel>(() => VerificationModel());
   getIt.registerFactory<DraftDetailsModel>(() => DraftDetailsModel());
+  getIt.registerFactory<OperationDetailsModel>(() => OperationDetailsModel());
   getIt.registerFactory<SearchModel>(() => SearchModel());
+  getIt.registerFactory<ProfileModel>(() => ProfileModel());
 }

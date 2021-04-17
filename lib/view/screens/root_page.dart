@@ -38,8 +38,8 @@ class RootPage extends StatelessWidget {
             return BottomNavigationBar(
               items: [
                 BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-                BottomNavigationBarItem(
-                    icon: Icon(Icons.search), label: 'Search'),
+                // BottomNavigationBarItem(
+                //     icon: Icon(Icons.search), label: 'Search'),
                 BottomNavigationBarItem(
                     icon: Icon(Icons.person), label: 'Profile'),
               ],
@@ -61,8 +61,8 @@ class RootPage extends StatelessWidget {
               controller: _pageController,
               children: [
                 HomePage(),
-                SearchPage(),
-                ProfilePage(),
+                // SearchPage(),
+                ProfilePage(ProfilePageArgs(doctor: args.doctor)),
               ],
             );
           },

@@ -7,7 +7,6 @@ import 'package:operation_reminder/model/department.dart';
 import 'package:operation_reminder/model/doctor.dart';
 import 'package:operation_reminder/model/draft.dart';
 import 'package:operation_reminder/model/hospital.dart';
-import 'package:operation_reminder/model/operation.dart';
 import 'package:operation_reminder/model/operation_room.dart';
 import 'package:operation_reminder/model/patient.dart';
 import 'package:operation_reminder/view/dialogs/department_search.dart';
@@ -24,11 +23,8 @@ class DraftDetailsPage extends StatelessWidget {
   static const String routeName = 'edit_operation_draft_page';
   final DraftDetailsPageArgs args;
   final Draft draft;
-  final Operation operation;
   final PriorityCardList priorityCardList = PriorityCardList();
-  DraftDetailsPage(this.args)
-      : this.draft = args.draft,
-        this.operation = args.operation;
+  DraftDetailsPage(this.args) : this.draft = args.draft;
   @override
   Widget build(BuildContext context) {
     final TextEditingController _dateTimeTextController =
@@ -38,15 +34,15 @@ class DraftDetailsPage extends StatelessWidget {
     DraftDetailsModel _model = getIt<DraftDetailsModel>();
     final _formKey = GlobalKey<FormState>();
     priorityCardList.selectedPriorityIndex = draft.priority;
-    if (operation != null) {
-      initializeDateFormatting('tr_TR', null).then((_) {
-        DateFormat dateFormat =
-            DateFormat("dd.MM.yyyy - HH:mm, EEEE ", 'tr_TR');
-        _dateTimeTextController.text = dateFormat
-            .format(DateTime.fromMillisecondsSinceEpoch(operation.date));
-        _model.selectedDate = operation.date;
-      });
-    }
+    // if (operation != null) {
+    //   initializeDateFormatting('tr_TR', null).then((_) {
+    //     DateFormat dateFormat =
+    //         DateFormat("dd.MM.yyyy - HH:mm, EEEE ", 'tr_TR');
+    //     _dateTimeTextController.text = dateFormat
+    //         .format(DateTime.fromMillisecondsSinceEpoch(operation.date));
+    //     _model.selectedDate = operation.date;
+    //   });
+    // }
 
     return Scaffold(
       appBar: AppBar(
@@ -102,9 +98,6 @@ class DraftDetailsPage extends StatelessWidget {
                   },
                 ),
                 ItemLoaderCard<Hospital>(
-                  future: operation != null
-                      ? _model.getHospital(operation.hospitalId)
-                      : null,
                   onComplete: (h) => _model.selectedHospital = h,
                   onTap: () async {
                     Hospital hospital = await showSearch<Hospital>(
@@ -116,9 +109,6 @@ class DraftDetailsPage extends StatelessWidget {
                   },
                 ),
                 ItemLoaderCard<OperationRoom>(
-                  future: operation != null
-                      ? _model.getRoom(operation.roomId, operation.hospitalId)
-                      : null,
                   onComplete: (r) => _model.selectedRoom = r,
                   onTap: () async {
                     if (_model.selectedHospital != null) {
@@ -138,9 +128,6 @@ class DraftDetailsPage extends StatelessWidget {
                   },
                 ),
                 ItemLoaderCard<Department>(
-                  future: operation != null
-                      ? _model.getDepartment(operation.departmentId)
-                      : null,
                   onComplete: (d) => _model.selectedDepartment = d,
                   onTap: () async {
                     Department department = await showSearch<Department>(
@@ -187,13 +174,7 @@ class DraftDetailsPage extends StatelessWidget {
                     return snapshot.hasData
                         ? SmartSelect<Doctor>.multiple(
                             title: 'Doctors',
-                            value:
-                                operation != null && operation.doctorIds != null
-                                    ? snapshot.data
-                                        .where((element) => operation.doctorIds
-                                            .contains(element.id))
-                                        .toList()
-                                    : [],
+                            value: [],
                             choiceItems: S2Choice.listFrom<Doctor, Doctor>(
                               source: snapshot.data,
                               value: (index, item) => item,
@@ -213,20 +194,17 @@ class DraftDetailsPage extends StatelessWidget {
                 ),
                 SizedBox(height: 20),
                 Container(
-                  width: 150,
+                  width: 180,
                   height: 50,
                   child: Expanded(
                     child: OutlinedButton(
-                      child: Text('Save Operation'),
+                      child: Text('Save to Operations'),
                       onPressed: () async {
                         if (_formKey.currentState.validate()) {
                           _formKey.currentState.save();
                           draft.priority =
                               priorityCardList.selectedPriorityIndex;
                           _model.draft = draft;
-                          if (operation != null) {
-                            _model.draft = operation;
-                          }
                           await _model.addOperation();
                           await _model.navigateToHome();
                         }

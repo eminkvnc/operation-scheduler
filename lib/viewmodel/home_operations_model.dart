@@ -7,6 +7,7 @@ import 'package:operation_reminder/model/draft.dart';
 import 'package:operation_reminder/model/operation.dart';
 import 'package:operation_reminder/model/patient.dart';
 import 'package:operation_reminder/view/screens/draft_details_page.dart';
+import 'package:operation_reminder/view/screens/operation_details_page.dart';
 import 'package:operation_reminder/viewmodel/base_model.dart';
 
 class HomeOperationsModel extends BaseModel {
@@ -53,7 +54,7 @@ class HomeOperationsModel extends BaseModel {
 
   Future<void> navigateToOperationDetails(Operation operation) async {
     return await navigatorService.navigateTo(
-        routeName: DraftDetailsPage.routeName,
-        args: DraftDetailsPageArgs(draft: operation, operation: operation));
+        routeName: OperationDetailsPage.routeName,
+        args: OperationDetailsPageArgs(operation: operation));
   }
 }

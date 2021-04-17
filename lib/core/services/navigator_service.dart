@@ -6,6 +6,8 @@ import 'package:operation_reminder/model/operation.dart';
 import 'package:operation_reminder/view/screens/add_operation_draft_page.dart';
 import 'package:operation_reminder/view/screens/draft_details_page.dart';
 import 'package:operation_reminder/view/screens/login_page.dart';
+import 'package:operation_reminder/view/screens/operation_details_page.dart';
+import 'package:operation_reminder/view/screens/profile_page.dart';
 import 'package:operation_reminder/view/screens/root_page.dart';
 import 'package:operation_reminder/view/screens/verification_page.dart';
 
@@ -51,6 +53,16 @@ class NavigatorService {
         DraftDetailsPageArgs args = settings.arguments;
         return MaterialPageRoute(builder: (context) => DraftDetailsPage(args));
         break;
+
+      case OperationDetailsPage.routeName:
+        OperationDetailsPageArgs args = settings.arguments;
+        return MaterialPageRoute(
+            builder: (context) => OperationDetailsPage(args));
+        break;
+      case ProfilePage.routeName:
+        ProfilePageArgs args = settings.arguments;
+        return MaterialPageRoute(builder: (context) => ProfilePage(args));
+        break;
       default:
         return MaterialPageRoute(
             builder: (context) => Container(
@@ -65,8 +77,19 @@ class RootPageArgs {
   RootPageArgs({@required this.doctor});
 }
 
+class ProfilePageArgs {
+  Doctor doctor;
+  ProfilePageArgs({@required this.doctor});
+}
+
 class DraftDetailsPageArgs {
   Draft draft;
   Operation operation;
+
   DraftDetailsPageArgs({@required this.draft, this.operation});
+}
+
+class OperationDetailsPageArgs {
+  Operation operation;
+  OperationDetailsPageArgs({@required this.operation});
 }

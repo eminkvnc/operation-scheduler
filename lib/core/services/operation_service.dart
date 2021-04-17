@@ -1,8 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:operation_reminder/core/constants.dart';
+import 'package:operation_reminder/model/customer.dart';
 import 'package:operation_reminder/model/department.dart';
 import 'package:operation_reminder/model/doctor.dart';
 import 'package:operation_reminder/model/draft.dart';
@@ -78,7 +77,6 @@ class OperationService {
         .orderBy(Constants.FIRESTORE_FIELD_OPERATION_DRAFT_PRIORITY);
     return _ref.get().then((value) {
       return value.docs.map((doc) {
-        print(Operation.fromSnapshot(doc));
         return Operation.fromSnapshot(doc);
       }).toList();
     });
@@ -142,25 +140,29 @@ class OperationService {
     await _ref
         .doc(operation.id)
         .set(operation.toMap(), SetOptions(merge: true));
+    // if (operation.doctorIds != null && operation.doctorIds.isNotEmpty) {
+    //   var _ref2 = (await getCurrentCustomerRef())
+    //       .collection(Constants.FIRESTORE_COL_DOCTOR_OPERATIONS);
+    //   operation.doctorIds.forEach((element) {
+    //     _ref2.doc().set({
+    //       Constants.FIRESTORE_FIELD_D_O_DOCTORID: element,
+    //       Constants.FIRESTORE_FIELD_D_O_OPERATIONID: operation.id
+    //     });
+    //   });
+    // }
     await (await getCurrentCustomerRef())
         .collection(Constants.FIRESTORE_COL_OPERATION_DRAFTS)
         .doc(operation.id)
         .delete();
   }
 
-  Future<Doctor> getDoctorWithId(String doctorId) async {
-    DocumentSnapshot _snapshot = await _firestore
-        .collection(Constants.FIRESTORE_COL_DOCTORS)
-        .doc(doctorId)
-        .get();
-    return _snapshot.exists ? Doctor.fromSnapshot(_snapshot) : null;
-  }
-
-  Future<List<Doctor>> getDoctors() async {
-    String customerId = (await getCurrentCustomerRef()).id;
-    var _ref = _firestore.collection(Constants.FIRESTORE_COL_DOCTORS);
-    return await _ref.where('customer_id', isEqualTo: customerId).get().then(
-        (value) => value.docs.map((doc) => Doctor.fromSnapshot(doc)).toList());
+  Future<void> doneOperation(Operation operation) async {
+    var _ref = (await getCurrentCustomerRef())
+        .collection(Constants.FIRESTORE_COL_OPERATIONS);
+    await _ref.doc(operation.id).set({
+      Constants.FIRESTORE_FIELD_OPERATION_STATUS:
+          Constants.FIRESTORE_VALUE_STATUS_DONE
+    }, SetOptions(merge: true));
   }
 
   Future<void> saveDoctorData(Doctor doctor) async {
@@ -246,4 +248,52 @@ class OperationService {
         .doc(departmentId)
         .get());
   }
+
+  Future<Customer> getCustomer() async {
+    return Customer.fromSnapshot(await (await getCurrentCustomerRef()).get());
+  }
+
+  Future<Doctor> getDoctorWithId(String doctorId) async {
+    DocumentSnapshot _snapshot = await _firestore
+        .collection(Constants.FIRESTORE_COL_DOCTORS)
+        .doc(doctorId)
+        .get();
+    return _snapshot.exists ? Doctor.fromSnapshot(_snapshot) : null;
+  }
+
+  Future<List<Doctor>> getDoctors() async {
+    String customerId = (await getCurrentCustomerRef()).id;
+    var _ref = _firestore.collection(Constants.FIRESTORE_COL_DOCTORS);
+    return await _ref.where('customer_id', isEqualTo: customerId).get().then(
+        (value) => value.docs.map((doc) => Doctor.fromSnapshot(doc)).toList());
+  }
+
+  // Future<List<Doctor>> getDoctorsWithOperationId(String operationId) async {
+  //   var _customerRef = (await getCurrentCustomerRef());
+  //   var _ref = _customerRef
+  //       .collection(Constants.FIRESTORE_COL_DOCTOR_OPERATIONS)
+  //       .where(Constants.FIRESTORE_FIELD_D_O_OPERATIONID,
+  //           isEqualTo: operationId);
+  //   return await _ref.get().then((value) {
+  //     _customerRef.collection(Constants.FIRESTORE_COL_DOCTORS).where(
+  //         FieldPath.documentId,
+  //         whereIn:
+  //             value.docs.map((e) => e[Constants.FIRESTORE_FIELD_D_O_DOCTORID]));
+  //     return value.docs.map((doc) => Doctor.fromSnapshot(doc)).toList();
+  //   });
+  // }
+  //
+  // Future<List<Operation>> getOperationsWithDoctorId(String doctorId) async {
+  //   var _customerRef = (await getCurrentCustomerRef());
+  //   var _ref = _customerRef
+  //       .collection(Constants.FIRESTORE_COL_DOCTOR_OPERATIONS)
+  //       .where(Constants.FIRESTORE_FIELD_D_O_DOCTORID, isEqualTo: doctorId);
+  //   return await _ref.get().then((value) {
+  //     _customerRef.collection(Constants.FIRESTORE_COL_OPERATIONS).where(
+  //         FieldPath.documentId,
+  //         whereIn: value.docs
+  //             .map((e) => e[Constants.FIRESTORE_FIELD_D_O_OPERATIONID]));
+  //     return value.docs.map((doc) => Operation.fromSnapshot(doc)).toList();
+  //   });
+  // }
 }

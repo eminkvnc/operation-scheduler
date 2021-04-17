@@ -1,4 +1,3 @@
-import 'package:operation_reminder/core/constants.dart';
 import 'package:operation_reminder/core/locator.dart';
 import 'package:operation_reminder/core/services/operation_service.dart';
 import 'package:operation_reminder/model/department.dart';
@@ -10,10 +9,9 @@ import 'package:operation_reminder/model/operation_room.dart';
 import 'package:operation_reminder/model/patient.dart';
 import 'package:operation_reminder/viewmodel/base_model.dart';
 
-class DraftDetailsModel extends BaseModel {
+class OperationDetailsModel extends BaseModel {
   OperationService _operationService = getIt<OperationService>();
 
-  Draft _draft;
   Operation _operation;
   Hospital _selectedHospital;
   OperationRoom _selectedRoom;
@@ -21,17 +19,18 @@ class DraftDetailsModel extends BaseModel {
   int _selectedDate;
   List<Doctor> _selectedDoctors;
 
-  Future<void> addOperation() async {
-    Operation operation = Operation(
-        draft: draft,
-        date: _selectedDate,
-        roomId: selectedRoom.id,
-        departmentId: _selectedDepartment.id,
-        hospitalId: _selectedHospital.id,
-        status: Constants.FIRESTORE_VALUE_STATUS_ACTIVE,
-        doctorIds: _selectedDoctors.map<String>((e) => e.id).toList());
+  Future<void> editOperation() async {
+    _operation.date = _selectedDate;
+    _operation.roomId = selectedRoom.id;
+    _operation.departmentId = _selectedDepartment.id;
+    _operation.hospitalId = _selectedHospital.id;
+    _operation.doctorIds = _selectedDoctors.map<String>((e) => e.id).toList();
 
     await _operationService.addOperation(operation);
+  }
+
+  Future<void> doneOperation() async {
+    await _operationService.doneOperation(operation);
   }
 
   Future<void> navigateToHome() async {
@@ -43,12 +42,6 @@ class DraftDetailsModel extends BaseModel {
 
   set operation(Operation value) {
     _operation = value;
-  }
-
-  Draft get draft => _draft;
-
-  set draft(Draft value) {
-    _draft = value;
   }
 
   Department get selectedDepartment => _selectedDepartment;

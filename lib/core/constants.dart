@@ -8,6 +8,7 @@ class Constants {
   static const String FIRESTORE_COL_HOSPITALS = 'hospitals';
   static const String FIRESTORE_COL_OPERATION_ROOMS = 'operation_rooms';
   static const String FIRESTORE_COL_DEPARTMENTS = 'departments';
+  static const String FIRESTORE_COL_DOCTOR_OPERATIONS = 'doctor_operations';
   static const String FIRESTORE_COL_VERIFICATION_REQUESTS =
       'verificationRequests';
 
@@ -45,6 +46,7 @@ class Constants {
   static const String FIRESTORE_FIELD_OPERATION_DRAFT_ID = 'id';
   static const String FIRESTORE_FIELD_OPERATION_DRAFT_PATIENTID = 'patient_id';
   static const String FIRESTORE_FIELD_OPERATION_DRAFT_PRIORITY = 'priority';
+  static const String FIRESTORE_FIELD_OPERATION_STATUS = 'status';
   static const String FIRESTORE_FIELD_OPERATION_DRAFT_DESCRIPTION =
       'description';
   static const String FIRESTORE_FIELD_OPERATION_DRAFT_CUSTOMERID =
@@ -57,9 +59,17 @@ class Constants {
   static const String FIRESTORE_FIELD_PATIENT_ID = 'id';
   static const String FIRESTORE_FIELD_PATIENT_NAME = 'name';
   static const String FIRESTORE_FIELD_PATIENT_PHONE = 'phone';
+  //
+  // //doctor_operations Fields
+  // static const String FIRESTORE_FIELD_D_O_DOCTORID = 'doctor_id';
+  // static const String FIRESTORE_FIELD_D_O_OPERATIONID = 'operation_id';
 
   //Values
   static const int FIRESTORE_VALUE_PRIORITY_LOW = 2;
   static const int FIRESTORE_VALUE_PRIORITY_NORMAL = 1;
   static const int FIRESTORE_VALUE_PRIORITY_HIGH = 0;
+
+  static const int FIRESTORE_VALUE_STATUS_DONE = 2;
+  static const int FIRESTORE_VALUE_STATUS_ACTIVE = 1;
+  static const int FIRESTORE_VALUE_STATUS_DELETED = 3;
 }

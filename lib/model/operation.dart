@@ -7,6 +7,7 @@ class Operation extends Draft {
   String roomId;
   String departmentId;
   String hospitalId;
+  int status;
   List<String> doctorIds;
 
   Operation(
@@ -14,6 +15,7 @@ class Operation extends Draft {
       this.roomId,
       this.departmentId,
       this.hospitalId,
+      this.status,
       this.doctorIds,
       Draft draft})
       : super(
@@ -33,6 +35,8 @@ class Operation extends Draft {
         snapshot.data()[Constants.FIRESTORE_FIELD_OPERATION_HOSPITALID];
     operation.departmentId =
         snapshot.data()[Constants.FIRESTORE_FIELD_OPERATION_DEPARTMENTID];
+    operation.status =
+        snapshot.data()[Constants.FIRESTORE_FIELD_OPERATION_STATUS];
     if (snapshot.data()[Constants.FIRESTORE_FIELD_OPERATION_DOCTOR_IDS] != null)
       operation.doctorIds = List.from(
           snapshot.data()[Constants.FIRESTORE_FIELD_OPERATION_DOCTOR_IDS]);
@@ -45,6 +49,7 @@ class Operation extends Draft {
       Constants.FIRESTORE_FIELD_OPERATION_ROOMID: this.roomId,
       Constants.FIRESTORE_FIELD_OPERATION_DEPARTMENTID: this.departmentId,
       Constants.FIRESTORE_FIELD_OPERATION_HOSPITALID: this.hospitalId,
+      Constants.FIRESTORE_FIELD_OPERATION_STATUS: this.status,
       Constants.FIRESTORE_FIELD_OPERATION_DOCTOR_IDS: this.doctorIds,
     }..addAll(super.toMap());
   }
