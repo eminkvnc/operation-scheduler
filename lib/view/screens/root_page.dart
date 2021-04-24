@@ -23,7 +23,7 @@ class RootPage extends StatelessWidget {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: Text(args.doctor.name),
+          title: Text('Operation Reminder'),
           actions: [
             IconButton(
               icon: Icon(Icons.logout),

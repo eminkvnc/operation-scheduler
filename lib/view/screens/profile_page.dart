@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:operation_reminder/core/locator.dart';
 import 'package:operation_reminder/core/services/navigator_service.dart';
@@ -20,44 +21,80 @@ class ProfilePage extends StatelessWidget {
     print(args.doctor.id);
     return Scaffold(
       body: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
+          Container(
+              width: 400,
+              child: Divider(
+                thickness: 1,
+                color: Colors.black12,
+              )),
+          Center(
             child: Text(
               args.doctor.name + " " + args.doctor.surname,
-              style: TextStyle(fontSize: 18),
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              FutureBuilder<Customer>(
-                future: _model.getCustomer(),
-                builder: (context, snapshot) {
-                  return snapshot.hasData
-                      ? Text(snapshot.data.name)
-                      : Center(
-                          child: CircularProgressIndicator(),
-                        );
-                },
-              ),
-            ],
+          Container(
+              width: 400,
+              child: Divider(
+                thickness: 1,
+                color: Colors.black12,
+              )),
+          Center(
+            child: FutureBuilder<Customer>(
+              future: _model.getCustomer(),
+              builder: (context, snapshot) {
+                return snapshot.hasData
+                    ? Text('Customer: ' + snapshot.data.name)
+                    : Center(
+                        child: CircularProgressIndicator(),
+                      );
+              },
+            ),
           ),
+          Container(
+              width: 400,
+              child: Divider(
+                thickness: 1,
+                color: Colors.black12,
+              )),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               Text(
-                args.doctor.email,
+                'Email: ' + args.doctor.email,
                 style: TextStyle(fontSize: 14),
               ),
               Text(
-                args.doctor.phone,
+                'Phone: ' + args.doctor.phone,
                 style: TextStyle(fontSize: 14),
               ),
             ],
           ),
-          Text('My Operations'),
-          SizedBox(height: 10),
+          Container(
+              width: 400,
+              child: Divider(
+                thickness: 1,
+                color: Colors.black12,
+              )),
+          Container(
+            margin: EdgeInsets.all(4.0),
+            padding: EdgeInsets.all(2.0),
+            alignment: Alignment.center,
+            color: Theme.of(context).primaryColor,
+            child: Text(
+              'My Operations',
+              style: TextStyle(fontSize: 20, color: Colors.white),
+            ),
+          ),
+          // Container(
+          //     width: 400,
+          //     child: Divider(
+          //       thickness: 3,
+          //       color: Theme.of(context).primaryColor,
+          //     )),
           Expanded(
             child: RefreshViewWithFuture(
               future: _model.getOperationsWithDoctorId(args.doctor.id),

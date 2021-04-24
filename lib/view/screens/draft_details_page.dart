@@ -178,7 +178,7 @@ class DraftDetailsPage extends StatelessWidget {
                       return null;
                     },
                   ),
-                  DoctorSelector(model: _model)
+                  DoctorSelector(model: _model),
                   SizedBox(height: 20),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
