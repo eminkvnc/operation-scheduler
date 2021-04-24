@@ -29,6 +29,10 @@ class OperationDetailsModel extends BaseModel {
     await _operationService.addOperation(operation);
   }
 
+  Future<void> deleteOperation(String operationId) async {
+    await _operationService.deleteOperation(operationId);
+  }
+
   Future<void> doneOperation() async {
     await _operationService.doneOperation(operation);
   }

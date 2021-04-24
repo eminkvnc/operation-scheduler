@@ -101,6 +101,10 @@ class PriorityCard extends StatelessWidget {
                     ? 'Medium\nPriority'
                     : 'High\nPriority',
             textAlign: TextAlign.center,
+            style: TextStyle(
+              color: selectedIndex == index ? Colors.white : Colors.black,
+              fontSize: selectedIndex == index ? 18 : 12,
+            ),
           ),
         ),
       ),

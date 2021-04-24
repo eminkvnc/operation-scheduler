@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:operation_reminder/core/locator.dart';
-import 'package:operation_reminder/model/department.dart';
-import 'package:operation_reminder/view/dialogs/department_search.dart';
-import 'package:operation_reminder/view/widgets/item_loader_card.dart';
 import 'package:operation_reminder/viewmodel/verification_model.dart';
 
 class VerificationPage extends StatelessWidget {
@@ -64,26 +61,10 @@ class VerificationPage extends StatelessWidget {
                             TextFormField(
                               decoration: InputDecoration(hintText: 'Grade'),
                               validator: (value) {
-                                return value.isNotEmpty
-                                    ? _model.doctor.departmentId == null
-                                        ? 'Please Select Department! '
-                                        : null
-                                    : 'Type grade';
+                                return value.isEmpty ? 'Type grade' : null;
                               },
                               onSaved: (newValue) =>
                                   _model.doctor.grade = newValue,
-                            ),
-                            ItemLoaderCard<Department>(
-                              onTap: () async {
-                                Department department =
-                                    await showSearch<Department>(
-                                        context: context,
-                                        delegate: DepartmentSearchDelegate());
-                                if (department != null) {
-                                  _model.doctor.departmentId = department.id;
-                                }
-                                return department;
-                              },
                             ),
                             FlatButton(
                               onPressed: () async {

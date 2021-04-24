@@ -34,6 +34,10 @@ class DraftDetailsModel extends BaseModel {
     await _operationService.addOperation(operation);
   }
 
+  Future<void> deleteDraft(String draftId) async {
+    await _operationService.deleteDraft(draftId);
+  }
+
   Future<void> navigateToHome() async {
     dispose();
     navigatorService.pop();

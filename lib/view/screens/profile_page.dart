@@ -31,19 +31,6 @@ class ProfilePage extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Text(
-                args.doctor.email,
-                style: TextStyle(fontSize: 14),
-              ),
-              Text(
-                args.doctor.phone,
-                style: TextStyle(fontSize: 14),
-              ),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
               FutureBuilder<Customer>(
                 future: _model.getCustomer(),
                 builder: (context, snapshot) {
@@ -54,18 +41,23 @@ class ProfilePage extends StatelessWidget {
                         );
                 },
               ),
-              FutureBuilder<Department>(
-                future: _model.getDepartment(args.doctor.departmentId),
-                builder: (context, snapshot) {
-                  return snapshot.hasData
-                      ? Text(snapshot.data.name)
-                      : Center(
-                          child: CircularProgressIndicator(),
-                        );
-                },
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Text(
+                args.doctor.email,
+                style: TextStyle(fontSize: 14),
+              ),
+              Text(
+                args.doctor.phone,
+                style: TextStyle(fontSize: 14),
               ),
             ],
           ),
+          Text('My Operations'),
+          SizedBox(height: 10),
           Expanded(
             child: RefreshViewWithFuture(
               future: _model.getOperationsWithDoctorId(args.doctor.id),

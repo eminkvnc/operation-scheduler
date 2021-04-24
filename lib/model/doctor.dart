@@ -8,7 +8,6 @@ class Doctor {
   String phone;
   String email;
   String grade;
-  String departmentId;
   String customerId;
   bool isVerified;
 
@@ -19,7 +18,6 @@ class Doctor {
     this.phone,
     this.email,
     this.grade,
-    this.departmentId,
     this.customerId,
     this.isVerified,
   });
@@ -32,8 +30,6 @@ class Doctor {
         phone: snapshot.data()[Constants.FIRESTORE_FIELD_DOCTOR_PHONE],
         email: snapshot.data()[Constants.FIRESTORE_FIELD_DOCTOR_EMAIL],
         grade: snapshot.data()[Constants.FIRESTORE_FIELD_DOCTOR_GRADE],
-        departmentId:
-            snapshot.data()[Constants.FIRESTORE_FIELD_DOCTOR_DEPARTMENTID],
         customerId:
             snapshot.data()[Constants.FIRESTORE_FIELD_DOCTOR_CUSTOMERID],
         isVerified:
@@ -48,7 +44,6 @@ class Doctor {
       Constants.FIRESTORE_FIELD_DOCTOR_PHONE: this.phone,
       Constants.FIRESTORE_FIELD_DOCTOR_EMAIL: this.email,
       Constants.FIRESTORE_FIELD_DOCTOR_GRADE: this.grade,
-      Constants.FIRESTORE_FIELD_DOCTOR_DEPARTMENTID: this.departmentId,
       Constants.FIRESTORE_FIELD_DOCTOR_CUSTOMERID: this.customerId,
       Constants.FIRESTORE_FIELD_DOCTOR_IS_VERIFIED: this.isVerified,
     };

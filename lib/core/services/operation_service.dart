@@ -49,6 +49,13 @@ class OperationService {
     //     event.docs.map((doc) => OperationDraft.fromSnapshot(doc)).toList());
   }
 
+  Future<void> deleteDraft(String draftId) async {
+    var _ref = (await getCurrentCustomerRef())
+        .collection(Constants.FIRESTORE_COL_OPERATION_DRAFTS)
+        .doc(draftId);
+    await _ref.delete();
+  }
+
   Future<List<QueryDocumentSnapshot>> getNextOperationDraftsPage(
       DocumentSnapshot lastVisible, int limit) async {
     Doctor doctor = await getCurrentDoctor();
@@ -82,6 +89,13 @@ class OperationService {
     });
     // return _ref.snapshots().map((event) =>
     //     event.docs.map((doc) => Operation.fromSnapshot(doc)).toList());
+  }
+
+  Future<void> deleteOperation(String operationId) async {
+    var _ref = (await getCurrentCustomerRef())
+        .collection(Constants.FIRESTORE_COL_OPERATIONS)
+        .doc(operationId);
+    await _ref.delete();
   }
 
   Future<List<Patient>> getPatients() async {
