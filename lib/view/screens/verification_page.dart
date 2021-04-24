@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:operation_reminder/core/constants.dart';
 import 'package:operation_reminder/core/locator.dart';
 import 'package:operation_reminder/viewmodel/verification_model.dart';
 
@@ -11,7 +12,17 @@ class VerificationPage extends StatelessWidget {
     VerificationModel _model = getIt<VerificationModel>();
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(title: Text('VerificationPage')),
+        appBar: AppBar(
+          title: Text('VerificationPage'),
+          actions: [
+            IconButton(
+              icon: Icon(Icons.logout),
+              onPressed: () async {
+                await _model.signOut();
+              },
+            ),
+          ],
+        ),
         body: StreamBuilder<bool>(
             stream: _model.checkVerificationSendStatus(),
             builder: (context, snapshot) {
@@ -22,9 +33,9 @@ class VerificationPage extends StatelessWidget {
                         child: Column(
                           children: [
                             TextFormField(
-                              initialValue: 'PKMcp7B4B9YLrWYY80if',
-                              decoration:
-                                  InputDecoration(hintText: 'Customer Id'),
+                              decoration: InputDecoration(
+                                  hintText:
+                                      'Customer Id (Type \'${Constants.TEST_CUSTOMER_ID}\' for testing)'),
                               validator: (value) =>
                                   value.isEmpty ? 'Type customer Id!' : null,
                               onSaved: (newValue) =>
@@ -66,7 +77,7 @@ class VerificationPage extends StatelessWidget {
                               onSaved: (newValue) =>
                                   _model.doctor.grade = newValue,
                             ),
-                            FlatButton(
+                            OutlinedButton(
                               onPressed: () async {
                                 if (_key.currentState.validate()) {
                                   _key.currentState.save();

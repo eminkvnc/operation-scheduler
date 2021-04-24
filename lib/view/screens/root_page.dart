@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:operation_reminder/core/locator.dart';
 import 'package:operation_reminder/core/services/navigator_service.dart';
-import 'package:operation_reminder/view/screens/search_page.dart';
 import 'package:operation_reminder/view/screens/home_page.dart';
 import 'package:operation_reminder/view/screens/profile_page.dart';
 import 'package:operation_reminder/viewmodel/login_model.dart';
@@ -53,6 +52,7 @@ class RootPage extends StatelessWidget {
         ),
         body: Consumer<RootModel>(
           builder: (context, model, child) {
+            model.getDoctorStream().listen((event) => model.doctor = event);
             return PageView(
               onPageChanged: (value) {
                 model.selectedBottomNavIndex = value;
@@ -62,7 +62,7 @@ class RootPage extends StatelessWidget {
               children: [
                 HomePage(),
                 // SearchPage(),
-                ProfilePage(ProfilePageArgs(doctor: args.doctor)),
+                ProfilePage(ProfilePageArgs(doctor: model.doctor)),
               ],
             );
           },

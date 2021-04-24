@@ -4,9 +4,11 @@ import 'package:operation_reminder/core/locator.dart';
 import 'package:operation_reminder/core/services/navigator_service.dart';
 import 'package:operation_reminder/model/customer.dart';
 import 'package:operation_reminder/model/department.dart';
+import 'package:operation_reminder/view/dialogs/change_customer_dialog.dart';
 import 'package:operation_reminder/view/screens/home_operations_page.dart';
 import 'package:operation_reminder/view/widgets/operation_card.dart';
 import 'package:operation_reminder/viewmodel/profile_model.dart';
+import 'package:toast/toast.dart';
 
 class ProfilePage extends StatelessWidget {
   static const String routeName = '/profile_page';
@@ -18,7 +20,6 @@ class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ProfileModel _model = getIt<ProfileModel>();
-    print(args.doctor.id);
     return Scaffold(
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -43,15 +44,38 @@ class ProfilePage extends StatelessWidget {
                 color: Colors.black12,
               )),
           Center(
-            child: FutureBuilder<Customer>(
-              future: _model.getCustomer(),
-              builder: (context, snapshot) {
-                return snapshot.hasData
-                    ? Text('Customer: ' + snapshot.data.name)
-                    : Center(
-                        child: CircularProgressIndicator(),
-                      );
-              },
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                FutureBuilder<Customer>(
+                  future: _model.getCustomer(),
+                  builder: (context, snapshot) {
+                    return snapshot.hasData
+                        ? Text('Customer: ' + snapshot.data.name)
+                        : Center(
+                            child: CircularProgressIndicator(),
+                          );
+                  },
+                ),
+                TextButton(
+                  onPressed: () async {
+                    String customerId = await showDialog(
+                        context: context,
+                        builder: (context) => ChangeCustomerDialog());
+                    bool _customerExists =
+                        await _model.changeCustomer(customerId);
+                    if (_customerExists) {
+                      args.doctor.customerId = customerId;
+                      Toast.show('Customer successfully changed.', context,
+                          duration: Toast.LENGTH_LONG);
+                    } else {
+                      Toast.show('Cannot find customer!', context,
+                          duration: Toast.LENGTH_LONG);
+                    }
+                  },
+                  child: Text('Change Customer'),
+                ),
+              ],
             ),
           ),
           Container(

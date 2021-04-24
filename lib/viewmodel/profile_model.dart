@@ -27,6 +27,10 @@ class ProfileModel extends BaseModel {
     return _operationService.getCustomer();
   }
 
+  Future<bool> changeCustomer(String customerId) async {
+    return await _operationService.changeCustomer(customerId);
+  }
+
   Future<void> navigateToOperationDetails(Operation operation) async {
     return await navigatorService.navigateTo(
         routeName: OperationDetailsPage.routeName,

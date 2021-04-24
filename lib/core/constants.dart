@@ -59,10 +59,6 @@ class Constants {
   static const String FIRESTORE_FIELD_PATIENT_ID = 'id';
   static const String FIRESTORE_FIELD_PATIENT_NAME = 'name';
   static const String FIRESTORE_FIELD_PATIENT_PHONE = 'phone';
-  //
-  // //doctor_operations Fields
-  // static const String FIRESTORE_FIELD_D_O_DOCTORID = 'doctor_id';
-  // static const String FIRESTORE_FIELD_D_O_OPERATIONID = 'operation_id';
 
   //Values
   static const int FIRESTORE_VALUE_PRIORITY_LOW = 2;
@@ -72,4 +68,6 @@ class Constants {
   static const int FIRESTORE_VALUE_STATUS_DONE = 2;
   static const int FIRESTORE_VALUE_STATUS_ACTIVE = 1;
   static const int FIRESTORE_VALUE_STATUS_DELETED = 3;
+
+  static const String TEST_CUSTOMER_ID = 'testcustomer';
 }
