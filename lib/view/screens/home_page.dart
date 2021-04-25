@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:operation_reminder/view/screens/home_operations_page.dart';
 
-import 'home_drafts_page.dart';
-
 class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
@@ -14,7 +12,7 @@ class _HomePageState extends State<HomePage>
 
   @override
   void initState() {
-    _tabController = TabController(vsync: this, length: 2, initialIndex: 0);
+    _tabController = TabController(vsync: this, length: 1, initialIndex: 0);
     super.initState();
   }
 
@@ -29,7 +27,6 @@ class _HomePageState extends State<HomePage>
               controller: _tabController,
               labelColor: Theme.of(context).primaryColor,
               tabs: [
-                Tab(text: 'Drafts'),
                 Tab(text: 'Operations'),
               ],
             ),
@@ -38,7 +35,6 @@ class _HomePageState extends State<HomePage>
             child: TabBarView(
               controller: _tabController,
               children: [
-                HomeDraftsPage(),
                 HomeOperationsPage(),
               ],
             ),

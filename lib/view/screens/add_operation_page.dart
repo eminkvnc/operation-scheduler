@@ -2,50 +2,33 @@ import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:operation_reminder/core/locator.dart';
-import 'package:operation_reminder/core/services/navigator_service.dart';
 import 'package:operation_reminder/model/department.dart';
-import 'package:operation_reminder/model/doctor.dart';
-import 'package:operation_reminder/model/draft.dart';
 import 'package:operation_reminder/model/hospital.dart';
 import 'package:operation_reminder/model/operation_room.dart';
 import 'package:operation_reminder/model/patient.dart';
 import 'package:operation_reminder/view/dialogs/department_search.dart';
 import 'package:operation_reminder/view/dialogs/hospital_search.dart';
+import 'package:operation_reminder/view/dialogs/patient_search.dart';
 import 'package:operation_reminder/view/dialogs/room_search.dart';
-import 'package:operation_reminder/view/widgets/delete_button.dart';
 import 'package:operation_reminder/view/widgets/doctor_selector.dart';
 import 'package:operation_reminder/view/widgets/item_loader_card.dart';
 import 'package:operation_reminder/view/widgets/priority_card_list.dart';
-import 'package:operation_reminder/viewmodel/draft_details_model.dart';
+import 'package:operation_reminder/viewmodel/add_operation_model.dart';
 import 'package:intl/date_symbol_data_local.dart';
-import 'package:smart_select/smart_select.dart';
 import 'package:toast/toast.dart';
 
-class DraftDetailsPage extends StatelessWidget {
-  static const String routeName = 'edit_operation_draft_page';
-  final DraftDetailsPageArgs args;
-  final Draft draft;
+class AddOperationPage extends StatelessWidget {
+  static const String routeName = 'add_operation_page';
   final PriorityCardList priorityCardList = PriorityCardList();
-  DraftDetailsPage(this.args) : this.draft = args.draft;
   @override
   Widget build(BuildContext context) {
     final TextEditingController _dateTimeTextController =
         TextEditingController();
     final TextEditingController _descriptionTextController =
-        TextEditingController(text: draft.description);
+        TextEditingController();
     final FocusNode _focusNode = FocusNode();
-    DraftDetailsModel _model = getIt<DraftDetailsModel>();
+    AddOperationModel _model = getIt<AddOperationModel>();
     final _formKey = GlobalKey<FormState>();
-    priorityCardList.selectedPriorityIndex = draft.priority;
-    // if (operation != null) {
-    //   initializeDateFormatting('tr_TR', null).then((_) {
-    //     DateFormat dateFormat =
-    //         DateFormat("dd.MM.yyyy - HH:mm, EEEE ", 'tr_TR');
-    //     _dateTimeTextController.text = dateFormat
-    //         .format(DateTime.fromMillisecondsSinceEpoch(operation.date));
-    //     _model.selectedDate = operation.date;
-    //   });
-    // }
 
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
@@ -54,7 +37,7 @@ class DraftDetailsPage extends StatelessWidget {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: Text('Edit Draft'),
+          title: Text('Add Operation'),
         ),
         body: Padding(
           padding: const EdgeInsets.all(12.0),
@@ -65,9 +48,14 @@ class DraftDetailsPage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   ItemLoaderCard<Patient>(
-                    future: _model.getPatient(draft.patientId),
-                    onTap: () {
-                      return null;
+                    initialValue: _model.selectedPatient,
+                    onTap: () async {
+                      Patient patient = await showSearch<Patient>(
+                          context: context, delegate: PatientSearchDelegate());
+                      if (patient != null) {
+                        _model.selectedPatient = patient;
+                      }
+                      return patient;
                     },
                   ),
                   Container(
@@ -150,8 +138,12 @@ class DraftDetailsPage extends StatelessWidget {
                   TextFormField(
                     controller: _descriptionTextController,
                     focusNode: _focusNode,
-                    decoration: InputDecoration(hintText: 'Description'),
-                    onSaved: (value) => draft.description = value,
+                    minLines: 1,
+                    maxLines: 5,
+                    decoration: InputDecoration(
+                      hintText: 'Description',
+                    ),
+                    onSaved: (value) => _model.description = value,
                     validator: (value) {
                       if (value.isEmpty) {
                         return 'Description Required!';
@@ -159,7 +151,7 @@ class DraftDetailsPage extends StatelessWidget {
                       if (priorityCardList.selectedPriorityIndex == -1) {
                         return 'Please Select Priority!';
                       }
-                      if (draft.patientId == null) {
+                      if (_model.selectedPatient == null) {
                         return 'Please Select Patient!';
                       }
                       if (_model.selectedHospital == null) {
@@ -178,7 +170,12 @@ class DraftDetailsPage extends StatelessWidget {
                       return null;
                     },
                   ),
-                  DoctorSelector(model: _model),
+                  DoctorSelector(
+                    future: _model.getDoctors(),
+                    onChange: (doctors) {
+                      _model.selectedDoctors = doctors;
+                    },
+                  ),
                   SizedBox(height: 20),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -192,22 +189,14 @@ class DraftDetailsPage extends StatelessWidget {
                             onPressed: () async {
                               if (_formKey.currentState.validate()) {
                                 _formKey.currentState.save();
-                                draft.priority =
+                                _model.selectedPriorityIndex =
                                     priorityCardList.selectedPriorityIndex;
-                                _model.draft = draft;
                                 await _model.addOperation();
                                 await _model.navigateToHome();
                               }
                             },
                           ),
                         ),
-                      ),
-                      DeleteButton(
-                        title: 'Draft',
-                        onDelete: () async {
-                          await _model.deleteDraft(draft.id);
-                          await _model.navigateToHome();
-                        },
                       ),
                     ],
                   ),

@@ -70,7 +70,7 @@ class RootPage extends StatelessWidget {
         floatingActionButton: FloatingActionButton(
           child: Icon(Icons.post_add_outlined),
           onPressed: () async {
-            await getIt<RootModel>().navigateToAddDraft();
+            await getIt<RootModel>().navigateToAddOperation();
           },
         ),
       ),

@@ -4,7 +4,7 @@ import 'package:operation_reminder/core/services/operation_service.dart';
 import 'package:operation_reminder/model/customer.dart';
 import 'package:operation_reminder/model/department.dart';
 import 'package:operation_reminder/model/operation.dart';
-import 'package:operation_reminder/view/screens/draft_details_page.dart';
+import 'package:operation_reminder/view/screens/add_operation_page.dart';
 import 'package:operation_reminder/view/screens/operation_details_page.dart';
 import 'package:operation_reminder/viewmodel/base_model.dart';
 

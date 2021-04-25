@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:operation_reminder/core/constants.dart';
-import 'package:operation_reminder/viewmodel/add_draft_model.dart';
 
 class PriorityCardList extends StatefulWidget {
   PriorityCardList({

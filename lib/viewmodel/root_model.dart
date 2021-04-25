@@ -1,7 +1,7 @@
 import 'package:operation_reminder/core/locator.dart';
 import 'package:operation_reminder/core/services/operation_service.dart';
 import 'package:operation_reminder/model/doctor.dart';
-import 'package:operation_reminder/view/screens/add_operation_draft_page.dart';
+import 'package:operation_reminder/view/screens/add_operation_page.dart';
 import 'package:operation_reminder/viewmodel/base_model.dart';
 
 class RootModel extends BaseModel {
@@ -28,7 +28,7 @@ class RootModel extends BaseModel {
     notifyListeners();
   }
 
-  Future<void> navigateToAddDraft() async {
-    await navigatorService.navigateTo(routeName: AddDraftPage.routeName);
+  Future<void> navigateToAddOperation() async {
+    await navigatorService.navigateTo(routeName: AddOperationPage.routeName);
   }
 }

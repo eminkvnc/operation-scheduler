@@ -13,18 +13,24 @@ class OperationDetailsModel extends BaseModel {
   OperationService _operationService = getIt<OperationService>();
 
   Operation _operation;
-  Hospital _selectedHospital;
-  OperationRoom _selectedRoom;
-  Department _selectedDepartment;
-  int _selectedDate;
-  List<Doctor> _selectedDoctors;
+  // Patient _selectedPatient;
+  // int _selectedPriorityIndex = -1;
+  // String _description;
+  // Hospital _selectedHospital;
+  // OperationRoom _selectedRoom;
+  // Department _selectedDepartment;
+  // int _selectedDate;
+  // List<Doctor> _selectedDoctors;
 
   Future<void> editOperation() async {
-    _operation.date = _selectedDate;
-    _operation.roomId = selectedRoom.id;
-    _operation.departmentId = _selectedDepartment.id;
-    _operation.hospitalId = _selectedHospital.id;
-    _operation.doctorIds = _selectedDoctors.map<String>((e) => e.id).toList();
+    // _operation.patientId = _selectedPatient.id;
+    // _operation.description = _description;
+    // _operation.priority = _selectedPriorityIndex;
+    // _operation.date = _selectedDate;
+    // _operation.roomId = selectedRoom.id;
+    // _operation.departmentId = _selectedDepartment.id;
+    // _operation.hospitalId = _selectedHospital.id;
+    // _operation.doctorIds = _selectedDoctors.map<String>((e) => e.id).toList();
 
     await _operationService.addOperation(operation);
   }
@@ -48,19 +54,6 @@ class OperationDetailsModel extends BaseModel {
     _operation = value;
   }
 
-  Department get selectedDepartment => _selectedDepartment;
-
-  set selectedDepartment(Department value) {
-    _selectedDepartment = value;
-  }
-
-  Hospital get selectedHospital => _selectedHospital;
-
-  set selectedHospital(Hospital value) {
-    _selectedHospital = value;
-    _selectedRoom = null;
-  }
-
   Future<Patient> getPatient(String patientId) async {
     return _operationService.getPatient(patientId);
   }
@@ -81,21 +74,51 @@ class OperationDetailsModel extends BaseModel {
     return _operationService.getDoctors();
   }
 
-  OperationRoom get selectedRoom => _selectedRoom;
-
-  set selectedRoom(OperationRoom value) {
-    _selectedRoom = value;
-  }
-
-  int get selectedDate => _selectedDate;
-
-  set selectedDate(int value) {
-    _selectedDate = value;
-  }
-
-  List<Doctor> get selectedDoctors => _selectedDoctors;
-
-  set selectedDoctors(List<Doctor> value) {
-    _selectedDoctors = value;
-  }
+// Department get selectedDepartment => _selectedDepartment;
+//
+// set selectedDepartment(Department value) {
+//   _selectedDepartment = value;
+// }
+//
+// Hospital get selectedHospital => _selectedHospital;
+//
+// set selectedHospital(Hospital value) {
+//   _selectedHospital = value;
+//   _selectedRoom = null;
+// }
+  // OperationRoom get selectedRoom => _selectedRoom;
+  //
+  // set selectedRoom(OperationRoom value) {
+  //   _selectedRoom = value;
+  // }
+  //
+  // int get selectedDate => _selectedDate;
+  //
+  // set selectedDate(int value) {
+  //   _selectedDate = value;
+  // }
+  //
+  // List<Doctor> get selectedDoctors => _selectedDoctors;
+  //
+  // set selectedDoctors(List<Doctor> value) {
+  //   _selectedDoctors = value;
+  // }
+  //
+  // Patient get selectedPatient => _selectedPatient;
+  //
+  // set selectedPatient(Patient value) {
+  //   _selectedPatient = value;
+  // }
+  //
+  // int get selectedPriorityIndex => _selectedPriorityIndex;
+  //
+  // set selectedPriorityIndex(int value) {
+  //   _selectedPriorityIndex = value;
+  // }
+  //
+  // String get description => _description;
+  //
+  // set description(String value) {
+  //   _description = value;
+  // }
 }

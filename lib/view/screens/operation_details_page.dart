@@ -43,7 +43,7 @@ class OperationDetailsPage extends StatelessWidget {
             DateFormat("dd.MM.yyyy - HH:mm, EEEE ", 'tr_TR');
         _dateTimeTextController.text = dateFormat
             .format(DateTime.fromMillisecondsSinceEpoch(_model.operation.date));
-        _model.selectedDate = _model.operation.date;
+        _model.operation.date = _model.operation.date;
       });
     }
 
@@ -86,7 +86,7 @@ class OperationDetailsPage extends StatelessWidget {
                           controller: _dateTimeTextController,
                           readOnly: true,
                           validator: (value) {
-                            if (_model.selectedDate == null) {
+                            if (_model.operation.date == null) {
                               return 'Please Select Date!';
                             }
                             return null;
@@ -108,7 +108,7 @@ class OperationDetailsPage extends StatelessWidget {
                                   _dateTimeTextController.text =
                                       dateFormat.format(time);
                                 });
-                                _model.selectedDate =
+                                _model.operation.date =
                                     time.millisecondsSinceEpoch;
                               },
                             );
@@ -118,13 +118,13 @@ class OperationDetailsPage extends StatelessWidget {
                           future: _model.operation != null
                               ? _model.getHospital(_model.operation.hospitalId)
                               : null,
-                          onComplete: (h) => _model.selectedHospital = h,
+                          onComplete: (h) => _model.operation.hospitalId = h.id,
                           onTap: () async {
                             Hospital hospital = await showSearch<Hospital>(
                                 context: context,
                                 delegate: HospitalSearchDelegate());
                             if (hospital != null) {
-                              _model.selectedHospital = hospital;
+                              _model.operation.hospitalId = hospital.id;
                             }
                             return hospital;
                           },
@@ -134,16 +134,16 @@ class OperationDetailsPage extends StatelessWidget {
                               ? _model.getRoom(_model.operation.roomId,
                                   _model.operation.hospitalId)
                               : null,
-                          onComplete: (r) => _model.selectedRoom = r,
+                          onComplete: (r) => _model.operation.roomId = r.id,
                           onTap: () async {
-                            if (_model.selectedHospital != null) {
+                            if (_model.operation.hospitalId != null) {
                               OperationRoom room =
                                   await showSearch<OperationRoom>(
                                       context: context,
                                       delegate: RoomSearchDelegate(
-                                          _model.selectedHospital.id));
+                                          _model.operation.hospitalId));
                               if (room != null) {
-                                _model.selectedRoom = room;
+                                _model.operation.roomId = room.id;
                               }
                               return room;
                             } else {
@@ -159,14 +159,15 @@ class OperationDetailsPage extends StatelessWidget {
                               ? _model
                                   .getDepartment(_model.operation.departmentId)
                               : null,
-                          onComplete: (d) => _model.selectedDepartment = d,
+                          onComplete: (d) =>
+                              _model.operation.departmentId = d.id,
                           onTap: () async {
                             Department department =
                                 await showSearch<Department>(
                                     context: context,
                                     delegate: DepartmentSearchDelegate());
                             if (department != null) {
-                              _model.selectedDepartment = department;
+                              _model.operation.departmentId = department.id;
                             }
                             return department;
                           },
@@ -174,6 +175,8 @@ class OperationDetailsPage extends StatelessWidget {
                         TextFormField(
                           focusNode: _focusNode,
                           controller: _descriptionTextController,
+                          minLines: 1,
+                          maxLines: 5,
                           onEditingComplete: () =>
                               FocusScope.of(context).unfocus(),
                           decoration: InputDecoration(hintText: 'Description'),
@@ -189,23 +192,28 @@ class OperationDetailsPage extends StatelessWidget {
                             if (_model.operation.patientId == null) {
                               return 'Please Select Patient!';
                             }
-                            if (_model.selectedHospital == null) {
+                            if (_model.operation.hospitalId == null) {
                               return 'Please Select Hospital!';
                             }
-                            if (_model.selectedRoom == null) {
+                            if (_model.operation.roomId == null) {
                               return 'Please Select Room!';
                             }
-                            if (_model.selectedDepartment == null) {
+                            if (_model.operation.departmentId == null) {
                               return 'Please Select Department!';
                             }
-                            if (_model.selectedDoctors == null ||
-                                _model.selectedDoctors.isEmpty) {
+                            if (_model.operation.doctorIds == null ||
+                                _model.operation.doctorIds.isEmpty) {
                               return 'Please Select Doctor!';
                             }
                             return null;
                           },
                         ),
-                        DoctorSelector(model: _model),
+                        DoctorSelector(
+                          future: _model.getDoctors(),
+                          onChange: (doctors) => _model.operation.doctorIds =
+                              doctors.map((e) => e.id).toList(),
+                          initialIds: _model.operation.doctorIds,
+                        ),
                         SizedBox(height: 20),
                         _model.operation.status !=
                                 Constants.FIRESTORE_VALUE_STATUS_DONE

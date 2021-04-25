@@ -4,6 +4,7 @@ import 'package:operation_reminder/core/locator.dart';
 import 'package:operation_reminder/core/services/navigator_service.dart';
 import 'package:operation_reminder/model/customer.dart';
 import 'package:operation_reminder/model/department.dart';
+import 'package:operation_reminder/model/operation.dart';
 import 'package:operation_reminder/view/dialogs/change_customer_dialog.dart';
 import 'package:operation_reminder/view/screens/home_operations_page.dart';
 import 'package:operation_reminder/view/widgets/operation_card.dart';
@@ -120,20 +121,27 @@ class ProfilePage extends StatelessWidget {
           //       color: Theme.of(context).primaryColor,
           //     )),
           Expanded(
-            child: RefreshViewWithFuture(
-              future: _model.getOperationsWithDoctorId(args.doctor.id),
-              builder: (operations) {
-                return GridView.count(
-                  crossAxisCount: 2,
-                  children: List.generate(
-                    operations.length,
-                    (index) => OperationCard(
-                        operation: operations[index],
-                        onTap: () => _model
-                            .navigateToOperationDetails(operations[index])),
-                  ),
-                );
-              },
+            child: RefreshIndicator(
+              onRefresh: () => _model.getOperationsWithDoctorId(args.doctor.id),
+              child: FutureBuilder<List<Operation>>(
+                future: _model.getOperationsWithDoctorId(args.doctor.id),
+                builder: (context, snapshot) {
+                  List<Operation> operations = snapshot.data;
+                  return snapshot.hasData
+                      ? GridView.count(
+                          crossAxisCount: 2,
+                          children: List.generate(
+                              operations.length,
+                              (index) => OperationCard(
+                                    operation: operations[index],
+                                    onTap: () =>
+                                        _model.navigateToOperationDetails(
+                                            operations[index]),
+                                  )),
+                        )
+                      : Center(child: CircularProgressIndicator());
+                },
+              ),
             ),
           ),
         ],

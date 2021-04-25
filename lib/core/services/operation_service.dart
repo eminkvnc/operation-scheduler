@@ -4,7 +4,6 @@ import 'package:operation_reminder/core/constants.dart';
 import 'package:operation_reminder/model/customer.dart';
 import 'package:operation_reminder/model/department.dart';
 import 'package:operation_reminder/model/doctor.dart';
-import 'package:operation_reminder/model/draft.dart';
 import 'package:operation_reminder/model/hospital.dart';
 import 'package:operation_reminder/model/operation.dart';
 import 'package:operation_reminder/model/operation_room.dart';
@@ -24,13 +23,13 @@ class OperationService {
     }
   }
 
-  Future<Query> getDraftsQuery() async {
-    DocumentReference _ref = await getCurrentCustomerRef();
-    print(_ref.path);
-    return _ref
-        .collection(Constants.FIRESTORE_COL_OPERATION_DRAFTS)
-        .orderBy(Constants.FIRESTORE_FIELD_OPERATION_DRAFT_PRIORITY);
-  }
+  // Future<Query> getDraftsQuery() async {
+  //   DocumentReference _ref = await getCurrentCustomerRef();
+  //   print(_ref.path);
+  //   return _ref
+  //       .collection(Constants.FIRESTORE_COL_OPERATION_DRAFTS)
+  //       .orderBy(Constants.FIRESTORE_FIELD_OPERATION_DRAFT_PRIORITY);
+  // }
 
   Future<DocumentReference> getCurrentCustomerRef() async {
     Doctor doctor = await getCurrentDoctor();
@@ -55,28 +54,28 @@ class OperationService {
       return false;
     }
   }
+  //
+  // Future<List<Draft>> getOperationDrafts() async {
+  //   var _ref = (await getCurrentCustomerRef())
+  //       .collection(Constants.FIRESTORE_COL_OPERATION_DRAFTS)
+  //       .orderBy(Constants.FIRESTORE_FIELD_OPERATION_DRAFT_PRIORITY);
+  //   return _ref.get().then(
+  //       (value) => value.docs.map((doc) => Draft.fromSnapshot(doc)).toList());
+  //   // return _ref.snapshots().map((event) =>
+  //   //     event.docs.map((doc) => OperationDraft.fromSnapshot(doc)).toList());
+  // }
 
-  Future<List<Draft>> getOperationDrafts() async {
-    var _ref = (await getCurrentCustomerRef())
-        .collection(Constants.FIRESTORE_COL_OPERATION_DRAFTS)
-        .orderBy(Constants.FIRESTORE_FIELD_OPERATION_DRAFT_PRIORITY);
-    return _ref.get().then(
-        (value) => value.docs.map((doc) => Draft.fromSnapshot(doc)).toList());
-    // return _ref.snapshots().map((event) =>
-    //     event.docs.map((doc) => OperationDraft.fromSnapshot(doc)).toList());
-  }
-
-  Future<void> deleteDraft(String draftId) async {
-    var _ref = (await getCurrentCustomerRef())
-        .collection(Constants.FIRESTORE_COL_OPERATION_DRAFTS)
-        .doc(draftId);
-    await _ref.delete();
-  }
+  // Future<void> deleteDraft(String draftId) async {
+  //   var _ref = (await getCurrentCustomerRef())
+  //       .collection(Constants.FIRESTORE_COL_OPERATION_DRAFTS)
+  //       .doc(draftId);
+  //   await _ref.delete();
+  // }
 
   Future<List<Operation>> getOperations() async {
     var _ref = (await getCurrentCustomerRef())
         .collection(Constants.FIRESTORE_COL_OPERATIONS)
-        .orderBy(Constants.FIRESTORE_FIELD_OPERATION_DRAFT_PRIORITY);
+        .orderBy(Constants.FIRESTORE_FIELD_OPERATION_PRIORITY);
     return _ref.get().then((value) {
       return value.docs.map((doc) {
         return Operation.fromSnapshot(doc);
@@ -136,12 +135,12 @@ class OperationService {
         .doc(room.id)
         .set(room.toMap());
   }
-
-  Future<void> addOperationDraft(Draft draft) async {
-    var _ref = (await getCurrentCustomerRef())
-        .collection(Constants.FIRESTORE_COL_OPERATION_DRAFTS);
-    await _ref.doc(draft.id).set(draft.toMap(), SetOptions(merge: true));
-  }
+  //
+  // Future<void> addOperationDraft(Draft draft) async {
+  //   var _ref = (await getCurrentCustomerRef())
+  //       .collection(Constants.FIRESTORE_COL_OPERATION_DRAFTS);
+  //   await _ref.doc(draft.id).set(draft.toMap(), SetOptions(merge: true));
+  // }
 
   Future<void> addOperation(Operation operation) async {
     var _ref = (await getCurrentCustomerRef())
@@ -149,10 +148,6 @@ class OperationService {
     await _ref
         .doc(operation.id)
         .set(operation.toMap(), SetOptions(merge: true));
-    await (await getCurrentCustomerRef())
-        .collection(Constants.FIRESTORE_COL_OPERATION_DRAFTS)
-        .doc(operation.id)
-        .delete();
   }
 
   Future<void> doneOperation(Operation operation) async {

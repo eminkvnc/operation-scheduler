@@ -3,21 +3,29 @@ import 'package:operation_reminder/model/doctor.dart';
 import 'package:smart_select/smart_select.dart';
 
 class DoctorSelector extends StatelessWidget {
-  final dynamic _model;
+  final Future<List<Doctor>> _future;
+  final List<String> _initialIds;
+  final Function(List<Doctor> doctors) _onChange;
 
-  const DoctorSelector({Key key, @required dynamic model})
-      : _model = model,
+  const DoctorSelector(
+      {Key key,
+      @required Future<List<Doctor>> future,
+      @required Function(List<Doctor> doctors) onChange,
+      List<String> initialIds})
+      : _future = future,
+        _onChange = onChange,
+        _initialIds = initialIds,
         super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<Doctor>>(
-      future: _model.getDoctors(),
+      future: _future,
       builder: (context, snapshot) {
         return snapshot.hasData
             ? SmartSelect<Doctor>.multiple(
                 title: 'Doctors',
-                value: _getPreSelectedDoctors(_model, snapshot),
+                value: _getPreSelectedDoctors(snapshot.data, _initialIds),
                 choiceItems: S2Choice.listFrom<Doctor, Doctor>(
                   source: snapshot.data,
                   value: (index, item) => item,
@@ -27,7 +35,7 @@ class DoctorSelector extends StatelessWidget {
                   return S2ChipsTile.fromState(value);
                 },
                 onChange: (value) {
-                  _model.selectedDoctors = value.value;
+                  _onChange(value.value);
                 },
                 choiceType: S2ChoiceType.chips,
                 modalType: S2ModalType.bottomSheet,
@@ -37,15 +45,9 @@ class DoctorSelector extends StatelessWidget {
     );
   }
 
-  List<Doctor> _getPreSelectedDoctors(
-      dynamic model, AsyncSnapshot<List<Doctor>> snapshot) {
-    if (model.operation != null && model.operation.doctorIds != null) {
-      model.selectedDoctors = snapshot.data
-          .where((element) => model.operation.doctorIds.contains(element.id))
-          .toList();
-      return snapshot.data
-          .where((element) => model.operation.doctorIds.contains(element.id))
-          .toList();
+  List<Doctor> _getPreSelectedDoctors(List<Doctor> doctors, List<String> ids) {
+    if (ids != null && ids != null) {
+      return doctors.where((element) => ids.contains(element.id)).toList();
     } else {
       return [];
     }

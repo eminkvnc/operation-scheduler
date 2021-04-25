@@ -7,8 +7,6 @@ import 'package:operation_reminder/core/locator.dart';
 import 'package:operation_reminder/core/services/operation_service.dart';
 import 'package:operation_reminder/view/screens/root_page.dart';
 import 'package:operation_reminder/view/screens/verification_page.dart';
-import 'package:operation_reminder/viewmodel/add_draft_model.dart';
-import 'package:operation_reminder/viewmodel/home_drafts_model.dart';
 import 'package:operation_reminder/viewmodel/login_model.dart';
 import 'package:operation_reminder/viewmodel/root_model.dart';
 import 'package:provider/provider.dart';
@@ -44,12 +42,6 @@ class OperationScheduler extends StatelessWidget {
               ),
               ChangeNotifierProvider(
                 create: (context) => getIt<RootModel>(),
-              ),
-              ChangeNotifierProvider(
-                create: (context) => getIt<AddDraftModel>(),
-              ),
-              ChangeNotifierProvider(
-                create: (context) => getIt<HomeDraftsModel>(),
               ),
             ],
             child: MaterialApp(
