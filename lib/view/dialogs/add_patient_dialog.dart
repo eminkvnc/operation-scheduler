@@ -29,6 +29,17 @@ class AddPatientDialog extends StatelessWidget {
                       },
                     ),
                     TextFormField(
+                      decoration: InputDecoration(hintText: 'Age'),
+                      autofocus: true,
+                      onSaved: (age) => _patient.age = age,
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return 'Age Required!';
+                        }
+                        return null;
+                      },
+                    ),
+                    TextFormField(
                       decoration: InputDecoration(hintText: 'Phone'),
                       autofocus: true,
                       onSaved: (phone) => _patient.phone = phone,

@@ -35,7 +35,7 @@ class OperationCard extends StatelessWidget {
             future: _operationService.getPatient(operation.patientId),
             builder: (context, AsyncSnapshot<Patient> snapshot) {
               if (snapshot.hasData) {
-                return Text(snapshot.data.name);
+                return Text(snapshot.data.name + '(${snapshot.data.age})');
               } else {
                 return Center(child: CircularProgressIndicator());
               }

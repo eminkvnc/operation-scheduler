@@ -43,29 +43,13 @@ class PatientSearchList extends StatelessWidget {
           return ListView(
             padding: EdgeInsets.all(8.0),
             children: []..addAll(snapshot.data
-                .map((patient) => ItemLoaderCard<Patient>(
-                        initialValue: patient, onTap: () => onTap(patient))
-
-                    //     Card(
-                    //   margin: EdgeInsets.all(4.0),
-                    //   child: ListTile(
-                    //     onTap: () => onTap(patient),
-                    //     leading: CircleAvatar(
-                    //       backgroundColor: Theme.of(context).accentColor,
-                    //       child: Text(patient.name[0]),
-                    //     ),
-                    //     title: Text(patient.name),
-                    //     shape: RoundedRectangleBorder(
-                    //       borderRadius: BorderRadius.circular(8.0),
-                    //       side: BorderSide(
-                    //         color: Theme.of(context).primaryColor,
-                    //         width: 4,
-                    //       ),
-                    //     ),
-                    //     tileColor: Theme.of(context).primaryColorLight,
-                    //   ),
-                    // ),
-                    )
+                .map(
+                  (patient) => ItemLoaderCard<Patient>(
+                    initialValue: patient,
+                    onTap: () => onTap(patient),
+                    createTitle: (item) => item.name + '(${item.age})',
+                  ),
+                )
                 .toList()),
           );
         },

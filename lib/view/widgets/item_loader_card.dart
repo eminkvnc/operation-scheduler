@@ -5,6 +5,7 @@ class ItemLoaderCard<T> extends StatelessWidget {
     Key key,
     @required this.onTap,
     this.initialValue,
+    this.createTitle,
     this.future,
     this.onComplete,
   }) : super(key: key);
@@ -12,6 +13,7 @@ class ItemLoaderCard<T> extends StatelessWidget {
   T initialValue;
   Future<T> future;
   Function(T) onComplete;
+  String Function(T) createTitle;
   final Function onTap;
 
   Widget build(BuildContext context) {
@@ -25,6 +27,7 @@ class ItemLoaderCard<T> extends StatelessWidget {
               return LoaderCard(
                 onTap: onTap,
                 initialValue: initialValue,
+                createTitle: createTitle,
               );
             } else {
               return Center(
@@ -36,6 +39,7 @@ class ItemLoaderCard<T> extends StatelessWidget {
       return LoaderCard(
         onTap: onTap,
         initialValue: initialValue,
+        createTitle: createTitle,
       );
     }
   }
@@ -46,19 +50,30 @@ class LoaderCard<T> extends StatefulWidget {
     Key key,
     @required this.onTap,
     this.initialValue,
+    this.createTitle,
   }) : super(key: key);
 
   T initialValue;
+  String Function(T) createTitle;
 
   final Function onTap;
 
   @override
-  _LoaderCardState<T> createState() => _LoaderCardState();
+  _LoaderCardState<T> createState() => _LoaderCardState<T>(createTitle);
 }
 
 class _LoaderCardState<T> extends State<LoaderCard> {
+  String Function(T) createTitle;
+
+  _LoaderCardState(this.createTitle);
+
   @override
   Widget build(BuildContext context) {
+    if (createTitle == null) {
+      createTitle = (T data) {
+        return widget.initialValue.name;
+      };
+    }
     return buildLoaderCard(context);
   }
 
@@ -77,11 +92,11 @@ class _LoaderCardState<T> extends State<LoaderCard> {
         leading: CircleAvatar(
           backgroundColor: Theme.of(context).accentColor,
           child: widget.initialValue != null
-              ? Text(widget.initialValue.name[0])
+              ? Text(createTitle(widget.initialValue)[0])
               : Icon(Icons.add),
         ),
         title: widget.initialValue != null
-            ? Text(widget.initialValue.name)
+            ? Text(createTitle(widget.initialValue))
             : Text('Select ' + T.toString()),
         tileColor: Theme.of(context).primaryColorLight,
         contentPadding: EdgeInsets.only(

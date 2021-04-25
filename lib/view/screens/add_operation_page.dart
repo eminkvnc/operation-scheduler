@@ -49,6 +49,7 @@ class AddOperationPage extends StatelessWidget {
                 children: [
                   ItemLoaderCard<Patient>(
                     initialValue: _model.selectedPatient,
+                    createTitle: (item) => item.name + '(${item.age})',
                     onTap: () async {
                       Patient patient = await showSearch<Patient>(
                           context: context, delegate: PatientSearchDelegate());

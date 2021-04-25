@@ -55,6 +55,7 @@ class Constants {
   //Patient Fields
   static const String FIRESTORE_FIELD_PATIENT_ID = 'id';
   static const String FIRESTORE_FIELD_PATIENT_NAME = 'name';
+  static const String FIRESTORE_FIELD_PATIENT_AGE = 'age';
   static const String FIRESTORE_FIELD_PATIENT_PHONE = 'phone';
 
   //Values

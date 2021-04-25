@@ -71,6 +71,7 @@ class OperationDetailsPage extends StatelessWidget {
                       children: [
                         ItemLoaderCard<Patient>(
                           future: _model.getPatient(_model.operation.patientId),
+                          createTitle: (item) => item.name + '(${item.age})',
                           onTap: () {
                             return null;
                           },
