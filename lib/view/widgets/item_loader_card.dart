@@ -77,10 +77,11 @@ class _LoaderCardState<T> extends State<LoaderCard> {
     return buildLoaderCard(context);
   }
 
-  Card buildLoaderCard(BuildContext context) {
-    return Card(
-      margin: EdgeInsets.all(4.0),
+  Widget buildLoaderCard(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.all(2.0),
       child: ListTile(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
         onTap: () async {
           T p = await widget.onTap();
           if (widget.initialValue != null)

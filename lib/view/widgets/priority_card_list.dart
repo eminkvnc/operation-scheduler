@@ -79,6 +79,8 @@ class PriorityCard extends StatelessWidget {
         onTap(index);
       },
       child: Card(
+        color: Colors.transparent,
+        shadowColor: Colors.transparent,
         shape: selectedIndex == index
             ? RoundedRectangleBorder(
                 side:
@@ -86,13 +88,16 @@ class PriorityCard extends StatelessWidget {
             : null,
         elevation: selectedIndex == index ? 5 : 1,
         child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(8.0),
+            color: index == Constants.FIRESTORE_VALUE_PRIORITY_LOW
+                ? Colors.green
+                : index == Constants.FIRESTORE_VALUE_PRIORITY_NORMAL
+                    ? Colors.yellow
+                    : Colors.red,
+          ),
           alignment: Alignment.center,
           padding: EdgeInsets.all(12.0),
-          color: index == Constants.FIRESTORE_VALUE_PRIORITY_LOW
-              ? Colors.green
-              : index == Constants.FIRESTORE_VALUE_PRIORITY_NORMAL
-                  ? Colors.yellow
-                  : Colors.red,
           child: Text(
             index == Constants.FIRESTORE_VALUE_PRIORITY_LOW
                 ? 'Low\nPriority'
