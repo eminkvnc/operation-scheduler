@@ -1,8 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:operation_reminder/core/locator.dart';
 import 'package:operation_reminder/model/operation.dart';
 import 'package:operation_reminder/view/widgets/operation_card.dart';
+import 'package:operation_reminder/view/widgets/sortable_list.dart';
 import 'package:operation_reminder/viewmodel/home_operations_model.dart';
 
 class HomeOperationsPage extends StatelessWidget {
@@ -31,19 +31,46 @@ class HomeOperationsPage extends StatelessWidget {
         child: FutureBuilder<List<Operation>>(
           future: _model.getOperations(),
           builder: (context, snapshot) {
-            List<Operation> operations = snapshot.data;
-            return snapshot.hasData
-                ? GridView.count(
-                    crossAxisCount: 2,
-                    children: List.generate(
-                        operations.length,
-                        (index) => OperationCard(
-                              operation: operations[index],
-                              onTap: () => _model.navigateToOperationDetails(
-                                  operations[index]),
-                            )),
-                  )
-                : Center(child: CircularProgressIndicator());
+            if (snapshot.hasData) {
+              List<Operation> operations = snapshot.data;
+              return SortableExpandableList<Operation>(
+                list: operations,
+                sortTitles: ['Priority', 'Date'],
+                sortOptions: [
+                  (e1, e2) => e1.priority.compareTo(e2.priority),
+                  (e1, e2) => e2.priority.compareTo(e1.priority),
+                  (e1, e2) => DateTime.fromMillisecondsSinceEpoch(e1.date)
+                      .compareTo(DateTime.fromMillisecondsSinceEpoch(e2.date)),
+                  (e1, e2) => DateTime.fromMillisecondsSinceEpoch(e2.date)
+                      .compareTo(DateTime.fromMillisecondsSinceEpoch(e1.date)),
+                ],
+                itemBuilder: (index, isExpanded) {
+                  return OperationCard(
+                    isExpanded: isExpanded,
+                    operation: operations[index],
+                    onTap: () =>
+                        _model.navigateToOperationDetails(operations[index]),
+                  );
+                },
+              );
+            } else {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+
+            // return snapshot.hasData
+            //     ? GridView.count(
+            //         crossAxisCount: 2,
+            //         children: List.generate(
+            //             operations.length,
+            //             (index) => OperationCard(
+            //                   operation: operations[index],
+            //                   onTap: () => _model.navigateToOperationDetails(
+            //                       operations[index]),
+            //                 )),
+            //       )
+            //     : Center(child: CircularProgressIndicator());
           },
         ),
       ),

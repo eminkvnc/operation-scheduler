@@ -128,8 +128,7 @@ class ProfilePage extends StatelessWidget {
                 builder: (context, snapshot) {
                   List<Operation> operations = snapshot.data;
                   return snapshot.hasData
-                      ? GridView.count(
-                          crossAxisCount: 2,
+                      ? ListView(
                           children: List.generate(
                               operations.length,
                               (index) => OperationCard(
